@@ -1,12 +1,15 @@
 <template>
-  <h1 class="font-semibold text-4xl text-teal-500">FastForm!</h1>
-
-  <h1 class="text-purple-500">Penis</h1>
+  <Test1 />
 </template>
 
 <script>
-export default {
+import Test1 from "./components/Test1.vue"
 
+export default {
+  name: 'App',
+  components: {
+    Test1
+  },
 }
 </script>
 
