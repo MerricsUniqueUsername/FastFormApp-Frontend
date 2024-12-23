@@ -1,22 +1,15 @@
 <template>
-  <Test1 />
+  <div id="app">
+    <h1>App</h1>
+  </div>
 </template>
 
 <script>
-import Test1 from "./components/Test1.vue"
-
 export default {
-  name: 'App',
-  components: {
-    Test1
-  },
+
 }
 </script>
 
 <style>
-  h1{
-    font-family: comic sans MS;
-    font-size: 500px;
-  }
 
 </style>
