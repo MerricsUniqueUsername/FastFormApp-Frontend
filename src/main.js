@@ -1,6 +1,17 @@
-import './assets/style.css'
+import { createApp } from 'vue';
+import './assets/style.css';
+import App from './App.vue';
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+import KeyFilter from 'primevue/keyfilter';
 
-import { createApp } from 'vue'
-import App from './App.vue'
+const app = createApp(App);
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura,
+  },
+});
 
-createApp(App).mount('#app')
+app.directive('keyfilter', KeyFilter);
+
+app.mount('#app');
