@@ -3,9 +3,10 @@
   <div class="my-6">
     <p @input="handleChange" ref="question" class="edit-text parent" v-text="element.question"/>
     <InputNumber 
-      class="w-full" 
+      class="" 
       :min="element.min"
       :max="element.max"
+      :step="element.step"
       :minFractionDigits="element.minFractionDigits"
       :maxFractionDigits="element.maxFractionDigits"
       :useGrouping="element.grouping"

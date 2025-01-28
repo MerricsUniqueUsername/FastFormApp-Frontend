@@ -60,12 +60,10 @@ export default {
     handleQuestionChange() {
       const value = this.$refs.question.innerText;
       this.element.question = value;
-      this.updateCustomMenu();
       this.$emit('change');
     },
     handleAnswerChange(index, label) {
       this.element.answers[index] = label.innerText;
-      this.updateCustomMenu();
       this.$emit('change');
     },
     updateCustomMenu() {
@@ -81,11 +79,13 @@ export default {
       } catch (error) {}  
     },
     addAnswer() {
+      if(!this.element.answers) {
+        this.element.answers = [];
+      }
       this.element.answers.push('New answer');
 
       // Wait for the DOM to update
       this.$nextTick(() => {
-        this.updateCustomMenu();
         this.$emit('change');
       });
     },
@@ -94,16 +94,26 @@ export default {
         this.element.answers.splice(index, 1);
       }
       this.$nextTick(() => {
-        this.updateCustomMenu();
         this.$emit('change', 'true');
       });
     },
   },
   mounted() {
+
     // Load custom menu
     this.updateCustomMenu();
     window.addEventListener('resize', this.updateCustomMenu);
-    window.addEventListener('scroll', this.updateCustomMenu);
+    document.getElementById('content').addEventListener('scroll', this.updateCustomMenu);
   },
+  watch: {
+    element: {
+      handler() {
+        this.$nextTick(() => {
+          this.updateCustomMenu();
+        });
+      },
+      deep: true,
+    }
+  }
 };
 </script>

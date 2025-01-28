@@ -10,6 +10,11 @@
       :element="element" 
       :selected="selected"
     />
+    <Divider
+      v-if="element.type === 'divider'" 
+      :element="element" 
+      :selected="selected"
+    />
     <ShortResponse 
       v-if="element.type === 'short-response'" 
       :element="element" 
@@ -89,6 +94,7 @@
 <script>
 import Header1 from './Elements/Header1.vue';
 import Paragraph from './Elements/Paragraph.vue';
+import Divider from './Elements/Divider.vue';
 import ShortResponse from './Elements/ShortResponse.vue';
 import LongResponse from './Elements/LongResponse.vue';
 import MultipleChoice from './Elements/MultipleChoice.vue';
@@ -117,6 +123,7 @@ export default {
     LinearScale,
     Slider,
     Rating,
+    Divider,
   },
   data() {
     return {
@@ -137,12 +144,6 @@ export default {
   methods: {
     loadElements(unselectHTML) {
 
-      // Make all 'edit-text' class elements editable
-      const editTextElements = this.$refs.element.querySelectorAll('.edit-text');
-      editTextElements.forEach((element) => {
-        element.setAttribute('contenteditable', true);
-      });
-
       // Change
       this.$emit('change', unselectHTML)
     }
@@ -151,7 +152,13 @@ export default {
     if(this.editing) {
 
       // Edit if in editing mode
-      this.$refs.element.addEventListener('click', (event) => {
+      this.$refs.element.addEventListener('mousedown', (event) => {
+
+        // Make all 'edit-text' class elements editable
+        const editTextElements = this.$refs.element.querySelectorAll('.edit-text');
+        editTextElements.forEach((element) => {
+          element.setAttribute('contenteditable', true);
+        });
 
         // Set selected HTML to parent element
         let htmlTarget = event.target;

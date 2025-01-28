@@ -7,9 +7,9 @@ import KeyFilter from 'primevue/keyfilter';
 
 const app = createApp(App);
 app.use(PrimeVue, {
-  theme: {
-    preset: Aura,
-  },
+  // theme: {
+  //   preset: Aura,
+  // },
 });
 
 app.directive('keyfilter', KeyFilter);

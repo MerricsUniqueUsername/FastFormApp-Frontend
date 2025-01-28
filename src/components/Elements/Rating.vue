@@ -10,7 +10,7 @@
 
   <div ref="element" class="my-6">
     <p @input="handleChange" ref="question" class="edit-text parent" v-text="element.question"/>
-    <Rating v-model="value" :stars="element.stars" class="my-2" />
+    <Rating v-model="value" :stars="element.num" class="my-2" />
   </div>
 
 </template>
@@ -45,13 +45,13 @@ export default {
   emits: ['change'],
   methods: {
     add() {
-      if(this.element.stars >= 10) return;
-      this.element.stars++;
+      if(this.element.num >= 10) return;
+      this.element.num++;
       this.handleChange();
     },
     remove() {
-      if(this.element.stars <= 2) return;
-      this.element.stars--;
+      if(this.element.num <= 2) return;
+      this.element.num--;
       this.handleChange();
     },
     handleChange() {
@@ -75,7 +75,17 @@ export default {
   mounted() {
     this.updateCustomMenu();
     window.addEventListener('resize', this.updateCustomMenu);
-    window.addEventListener('scroll', this.updateCustomMenu());
+    document.getElementById('content').addEventListener('scroll', this.updateCustomMenu());
   },
+  watch: {
+    element: {
+      handler() {
+        this.$nextTick(() => {
+          this.updateCustomMenu();
+        });
+      },
+      deep: true,
+    }
+  }
 }
 </script>

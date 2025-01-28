@@ -1,13 +1,13 @@
 <template>
 
   <!-- Custom menu -->
-  <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none">
+  <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none z-10">
     
     <!-- Inputs -->
-    <div class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto text-white w-full">
-      <div class="w-full" @input="handleChange" v-for="(option, index) in element.options" :key="index" type="text">
+    <div class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto text-white w-full border border-gray-400 rounded-sm">
+      <div class="w-full" @input="handleChange" v-for="(answers, index) in element.answers" :key="index" type="text">
         <RemoveButton @click="removeAnswer(index)" class="absolute -translate-x-full translate-y-1/2" />
-        <input class="p-1 w-full" v-model="element.options[index]">
+        <input class="p-1 w-full text-black border-t border-t-gray-200" v-model="element.answers[index]">
       </div>
       <AddButton class="translate-y-full bottom-0 absolute -translate-x-1/2 left-[50%] pointer-events-auto" @click="addAnswer" />
     </div>
@@ -19,13 +19,13 @@
       <Select
         v-if="!element.multiselect"
         class="w-full"
-        :options="element.options"
+        :options="element.answers"
         :placeholder="element.placeholder"
       />
       <MultiSelect
         v-else
         class="w-full"
-        :options="element.options"
+        :options="element.answers"
         :placeholder="element.placeholder"
       />
     </div>
@@ -66,14 +66,16 @@
     methods: {
       handleChange() {
         this.$emit('change');
-        this.updateCustomMenu();
       },
       addAnswer() {
-        this.element.options.push('New answer');
+        if(!this.element.answers) {
+          this.element.answers = [];
+        }
+        this.element.answers.push('New answer');
         this.handleChange();
       },
       removeAnswer(index) {
-        this.element.options.splice(index, 1);
+        this.element.answers.splice(index, 1);
         this.handleChange();
       },
       updateCustomMenu() {
@@ -92,7 +94,17 @@
     mounted() {
       this.updateCustomMenu();
       window.addEventListener('resize', this.updateCustomMenu);
-      window.addEventListener('scroll', this.updateCustomMenu);
+      document.getElementById('content').addEventListener('scroll', this.updateCustomMenu);
+    },
+    watch: {
+      element: {
+        handler() {
+          this.$nextTick(() => {
+            this.updateCustomMenu();
+          });
+        },
+        deep: true,
+      }
     }
   }
   </script>

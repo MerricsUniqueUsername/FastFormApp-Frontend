@@ -4,8 +4,8 @@
     <p @input="handleChange" ref="question" class="edit-text parent" v-text="element.question"/>
     <input 
       :placeholder="element.placeholder"
-      type="email" 
-      class="parent border bg-zinc-100 border-gray-300 p-2 w-full" 
+      type="email"
+      class="email-input"
     />
   </div>
   

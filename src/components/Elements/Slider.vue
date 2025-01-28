@@ -3,7 +3,7 @@
   <div class="my-6">
     <p @input="handleChange" ref="question" class="edit-text parent" v-text="element.question"/>
     <input 
-      class="w-full" 
+      class="slider" 
       type="range"
       :min="element.min"
       :max="element.max"

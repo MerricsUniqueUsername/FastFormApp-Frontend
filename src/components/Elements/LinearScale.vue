@@ -20,7 +20,7 @@
           :key="n" 
           @click="select(n)"
           :class="{ 'chosen': value == n }"
-          class="border transition-all duration-100 border-black h-7 cursor-pointer flex items-center justify-center aspect-square rounded-sm"
+          class="scale-button"
         >
           {{ n }}
         </div>
@@ -100,13 +100,17 @@ export default {
   mounted() {
     this.updateCustomMenu();
     window.addEventListener('resize', this.updateCustomMenu);
-    window.addEventListener('scroll', this.updateCustomMenu);
+    document.getElementById('content').addEventListener('scroll', this.updateCustomMenu);
+  },
+  watch: {
+    element: {
+      handler() {
+        this.$nextTick(() => {
+          this.updateCustomMenu();
+        });
+      },
+      deep: true,
+    }
   }
 }
 </script>
-
-<style>
-  .chosen {
-    @apply bg-black text-white;
-  }
-</style>

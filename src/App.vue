@@ -1,24 +1,24 @@
 <template>
-  <div id="app" class="h-screen w-screen flex flex-col">
+  <div id="app" class="h-screen w-screen flex flex-col relative overflow-hidden">
+
+    <!-- Element list -->
+    <ElementList ref="element_list" v-show="elementListOpen" @addElement="handleAddElement" class="z-50" />
 
     <!-- Topbar -->
-    <Topbar />
+    <Topbar class="relative" />
 
     <!-- Body -->
-    <div class="flex flex-col h-full">
-      <div class="flex flex-row flex-1">
+    <div class="flex flex-col relative" style="height: calc(100% - 4rem);">
+      <div class="flex flex-row relative overflow-hidden h-full">
 
-        <div class="w-1/6 bg-gray-200">
-          <div class="p-4">
-            <h1 class="text-black text-sm">{{ form }}</h1>
-          </div>
-        </div>
+        <!-- Left sidebar -->
+        <LeftSidebar ref="left_sidebar" @select="selectElement" @openMenu="openMenu" :form="form" :selectedId="selectedId" />
 
         <!-- Main Content -->
-        <FormPreview :form="form" />
+        <FormPreview ref="form_preview" :form="form" @select="setSelectedId" />
 
         <!-- Right Sidebar -->
-        <RightSidebar />
+        <RightSidebar ref="right_sidebar" :form="form" @select="selectElement" :selectedId="selectedId" />
         
       </div>
     </div>
@@ -28,118 +28,118 @@
 
 <script>
 import RightSidebar from './components/RightSidebar.vue';
+import LeftSidebar from './components/LeftSidebar.vue';
 import Topbar from './components/Topbar.vue';
 import FormPreview from './components/FormPreview.vue';
+import ElementList from './components/ElementList.vue';
 import AddQuestions from './components/AddQuestions.vue';
 
 export default {
   name: 'App',
   components: {
     RightSidebar,
+    LeftSidebar,
     Topbar,
     FormPreview,
     AddQuestions,
+    ElementList,
   },
 
   methods: {
+
+    /**
+     * Set selected ID to highlight element in leftbar
+     * @param element 
+     */
+    setSelectedId(element) {
+      this.selectedId = element.id;
+      this.$refs.right_sidebar.loadSelectedElement(element);
+    },
+
+    /**
+     * Select element in form preview
+     * @param element
+     */
+    selectElement(element) {
+      this.$nextTick(() => {
+        this.$refs.form_preview.selectElement(element);
+        this.$refs.form_preview.updateSelector();
+      });
+    },
+
+    /**
+     * Add element to form
+     * @param element 
+     */
+    handleAddElement(element) {
+      const newElement = { ...element };
+      newElement.id = this.form.highestId;
+      newElement.name = '',
+      newElement.conditions = [];
+      this.form.highestId++;
+      this.form.elements.push(newElement);
+      this.closeMenu();
+    },
+
+    /**
+     * Open element list menu
+     */
+    openMenu() {
+      const elementList = this.$refs.element_list;
+      const leftSidebar = this.$refs.left_sidebar;
+
+      // Get rect of left sidebar
+      const sidebarRect = leftSidebar.$el.getBoundingClientRect();
+
+      // Move element list to the rect of the left sidebar
+      elementList.$el.style.top = `${sidebarRect.top}px`;
+      elementList.$el.style.left = `${sidebarRect.right}px`;
+
+      this.elementListOpen = true;
+    },
+
+    /**
+     * Close element list menu
+     */
+    closeMenu() {
+      this.elementListOpen = false;
+    },
   },
 
   data() {
     return {
 
+      elementListOpen: false,
+      selectedId: null,
+
       // Form data
       form: {
-        title: 'Dox yourself',
-        description: 'Gemme all your fuckin data',
-        elements: [
-          // {
-          //   id: 1,
-          //   type: 'h1',
-          //   content: 'Welcome to the greatest form ever'
-          // },
-          // {
-          //   id: 2,
-          //   type: 'p',
-          //   content: 'This is a paragraph!'
-          // },
-          // {
-          //   id: 3,
-          //   type: 'short-response',
-          //   question: 'Tell me how stupid you are',
-          // },
-          // {
-          //   id: 4,
-          //   type: 'number',
-          //   question: 'Tell me how much of a bitch you are.',
-          //   integer: false,
-          //   grouping: false,
-          //   min: -100,
-          //   max: 100,
-          //   minFractionDigits: 2,
-          //   maxFractionDigits: 4,
-          //   prefix: '',
-          //   suffix: '',
-          //   placeholder: 'Choose a fucking number',
-          //   showButtons: true,
-          //   buttonLayout: 'horizontal'
-          // },
-          // {
-          //   id: 5,
-          //   type: 'dropdown',
-          //   multiselect: false,
-          //   question: 'Choose your favorite color',
-          //   placeholder: 'Choose your favorite color',
-          //   options: ['red', 'green', 'blue', 'purple']
-          // },
-          // {
-          //   id: 6,
-          //   type: 'email',
-          //   question: 'Gimme your email',
-          //   placeholder: 'Enter email'
-          // },
-          // {
-          //   id: 7,
-          //   type: 'phone-number',
-          //   question: 'Gimme your phone number',
-          //   placeholder: 'Enter phone number'
-          // },
-          // {
-          //   id: 8,
-          //   type: 'date',
-          //   question: 'Choose your birthday',
-          //   placeholder: 'Choose your birthday',
-          //   showTime: true,
-          //   timeOnly: false,
-          //   hourFormat: '12',
-          // },
-          // {
-          //   id: 9,
-          //   type: 'linear-scale',
-          //   question: 'Choose your favorite number',
-          //   num: 5,
-          //   labelMax: 'Love',
-          //   labelMin: 'Hate'
-          // },
-          {
-            id: 10,
-            type: 'slider',
-            question: 'Choose your favorite number',
-            min: 0,
-            max: 100,
-            step: 1,
-            value: 50,
-          },
-          {
-            id: 11,
-            type: 'rating',
-            question: 'Rate this form',
-            stars: 10,
-          }
-
-        ],
+        title: 'Untitled form',
+        description: '',
+        highestId: 0,
+        elements: [],
       }
 
     }
+  },
+
+  mounted() {
+    
+    // Add event listener to close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!this.$refs.left_sidebar.$el.contains(e.target) && !this.$refs.element_list.$el.contains(e.target)) {
+        this.closeMenu();
+      }
+    });
+
+    // Add event listener to close menu when resizing window
+    window.addEventListener('resize', () => {
+      this.closeMenu();
+    });
+
   }
 }
 </script>
+
+
+
