@@ -1,23 +1,26 @@
 <template>
-  <!-- Custom menu -->
-  <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none">
-    <AddButton @click="addAnswer" class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto" />
-  </div>
 
-  <div ref="element" class="my-6">
-    <p @input="handleQuestionChange" ref="question" class="edit-text parent" v-text="element.question"/>
+  <div>
+    <!-- Custom menu -->
+    <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none">
+      <AddButton @click="addAnswer" class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto" />
+    </div>
 
-    <div ref="answer" v-for="(answer, index) in element.answers" :key="index" class="flex items-center gap-2">
+    <div ref="element" class="my-6">
+      <p @input="handleQuestionChange" ref="question" class="edit-text parent question" v-text="element.question"/>
 
-      <!-- Single select -->
-      <RadioButton v-if="!multiselect" :id="'radio-' + index" name="color" :value="answer" v-model="value" />
-      <p v-if="!multiselect" @input="handleAnswerChange(index, $event.target)" class="parent w-full edit-text" :for="'radio-' + index">{{ answer }}</p>
+      <div ref="answer" v-for="(answer, index) in element.answers" :key="index" class="flex items-center gap-2">
 
-      <!-- Multi select -->
-      <Checkbox v-if="multiselect" :id="'checkbox-' + index" :value="answer" v-model="value" />
-      <p v-if="multiselect" @input="handleAnswerChange(index, $event.target)" class="parent w-full edit-text" :for="'checkbox-' + index">{{ answer }}</p>
+        <!-- Single select -->
+        <RadioButton v-if="!multiselect" :id="'radio-' + index" name="color" :value="answer" v-model="value" />
+        <p v-if="!multiselect" @input="handleAnswerChange(index, $event.target)" class="parent w-full edit-text" :for="'radio-' + index">{{ answer }}</p>
 
-      <RemoveButton v-if="selected" @click="removeAnswer(index)" class="pointer-events-auto absolute" />
+        <!-- Multi select -->
+        <Checkbox v-if="multiselect" :id="'checkbox-' + index" :value="answer" v-model="value" />
+        <p v-if="multiselect" @input="handleAnswerChange(index, $event.target)" class="parent w-full edit-text" :for="'checkbox-' + index">{{ answer }}</p>
+
+        <RemoveButton v-if="selected" @click="removeAnswer(index)" class="pointer-events-auto absolute" />
+      </div>
     </div>
   </div>
 </template>
@@ -55,7 +58,7 @@ export default {
       default: false,
     }
   },
-  emits: ['change'],
+  emits: ['change', 'input'],
   methods: {
     handleQuestionChange() {
       const value = this.$refs.question.innerText;
@@ -113,6 +116,12 @@ export default {
         });
       },
       deep: true,
+    },
+    value: {
+      immediate: true,
+      handler(newVal) {
+        this.$emit('input', newVal);
+      }
     }
   }
 };

@@ -3,11 +3,12 @@
 
     <!-- Topbar tabs -->
     <Tabs value="question" style="height: 100%;">
-      <TabList class="text-[1vw]">
-        <Tab value="question" class="w-1/3">Question</Tab>
-        <Tab value="design" class="w-1/3">Conditions</Tab>
-        <Tab value="css" class="w-1/3">Design</Tab>
+      <TabList class="text-[14px]">
+        <Tab @click="leaveCSSMenu()" value="question" class="w-1/3">Question</Tab>
+        <Tab @click="enterCSSMenu()" value="css" class="w-1/3">CSS</Tab>
+        <Tab @click="leaveCSSMenu()" value="design" class="w-1/3">Design</Tab>
       </TabList>
+
       <TabPanels>
         <TabPanel value="question">
 
@@ -30,11 +31,17 @@
 
             <!-- Variable name -->
             <p>Variable name</p>
-            <input type="text" @input="updateSelectedElement" v-model="selectedElement.name" spellcheck="false">
+            <input type="text" pattern="^[a-zA-Z_][a-zA-Z0-9_]*$" @input="updateSelectedElement" v-model="selectedElement.name" spellcheck="false">
 
             <!-- Required -->
             <p>Required</p>
             <input type="checkbox" @change="updateSelectedElement" v-model="selectedElement.required" class="!h-4 !w-4 relative" />
+
+            <!-- Conditions -->
+            <button class="w-full flex justify-end text-gray-500 hover:text-gray-700 cursor-pointer"
+                    @click="$emit('openConditionEditor')">
+              Open condition editor
+            </button>
 
             <!-- Divider -->
             <div class="border-b border-gray-300 my-4"></div>
@@ -183,16 +190,156 @@
         </TabPanel>
 
         <!-- Conditions -->
-        <TabPanel value="conditions">
+        <TabPanel value="design">
           <div class="p-4">
 
+            <Accordion :value="[]" multiple>
+
+              <!-- Other -->
+              <AccordionPanel value="other">
+
+                <!-- Text edit -->
+                <AccordionHeader>Other</AccordionHeader>
+                  <AccordionContent>
+                    <p>Background color</p>
+                    <ColorPicker v-model="form.theme.backgroundColor" />
+                    
+                    <p>Divider color</p>
+                    <ColorPicker v-model="form.theme.dividerColor" />
+
+                    <p>Border radius</p>
+                    <input type="range" min="0" max="50" v-model="form.theme.borderRadius" />
+
+                    <p>Shadow scale</p>
+                    <input type="range" min="0" max="10" step="0.5" v-model="form.theme.shadowSize" />
+
+                  </AccordionContent>
+                </AccordionPanel>
+
+              <AccordionPanel value="text">
+
+                <!-- Text edit -->
+                <AccordionHeader>Text</AccordionHeader>
+                <AccordionContent>
+                  <p>Font family</p>
+                  <FontPicker v-model="form.theme.fontFamily" />
+
+                  <p>Header color</p>
+                  <ColorPicker v-model="form.theme.headerColor" />
+
+                  <p>Paragraph color</p>
+                  <ColorPicker v-model="form.theme.paragraphColor" />
+
+                  <p>Question color</p>
+                  <ColorPicker v-model="form.theme.questionColor" />
+                </AccordionContent>
+              </AccordionPanel>
+
+              <!-- Input boxes -->
+              <AccordionPanel value="input">
+                <AccordionHeader>Input boxes</AccordionHeader>
+                <AccordionContent>
+
+                  <p>Font size</p>
+                  <input type="number" v-model="form.theme.inputFontSize" />
+
+                  <p>Background color</p>
+                  <ColorPicker v-model="form.theme.inputBackgroundColor" />
+
+                  <p>Border color</p>
+                  <ColorPicker v-model="form.theme.inputBorderColor" />
+
+                  <p>Text color</p>
+                  <ColorPicker v-model="form.theme.inputTextColor" />
+
+                  <p>Placeholder color</p>
+                  <ColorPicker v-model="form.theme.inputPlaceholderColor" />
+
+                  <p>Background color (hover)</p>
+                  <ColorPicker v-model="form.theme.inputBackgroundColorHover" />
+
+                  <p>Border color (hover)</p>
+                  <ColorPicker v-model="form.theme.inputBorderColorHover" />
+
+                  <p>Text color (hover)</p>
+                  <ColorPicker v-model="form.theme.inputTextColorHover" />
+
+                  <p>Placeholder color (hover)</p>
+                  <ColorPicker v-model="form.theme.inputPlaceholderColorHover" />
+
+                  <p>Focus border color</p>
+                  <ColorPicker v-model="form.theme.inputFocusBorderColor" />
+
+                  <p>Focus background color</p>
+                  <ColorPicker v-model="form.theme.inputFocusBackgroundColor" />
+
+                  <p>Focus text color</p>
+                  <ColorPicker v-model="form.theme.inputFocusTextColor" />
+
+                  <p>Input padding (px)</p>
+                  <input type="number" v-model="form.theme.inputPadding" />
+                </AccordionContent>
+              </AccordionPanel>
+
+              <!-- Dropdown menus -->
+              <AccordionPanel value="dropdown">
+                <AccordionHeader>Menus</AccordionHeader>
+                <AccordionContent>
+                  <p>Font size</p>
+                  <input type="number" v-model="form.theme.dropdownFontSize" />
+
+                  <p>Background color</p>
+                  <ColorPicker v-model="form.theme.dropdownBackgroundColor" />
+
+                  <p>Border color</p>
+                  <ColorPicker v-model="form.theme.dropdownBorderColor" />
+
+                  <p>Text color</p>
+                  <ColorPicker v-model="form.theme.dropdownTextColor" />
+
+                  <p>Background color (hover)</p>
+                  <ColorPicker v-model="form.theme.dropdownBackgroundColorHover" />
+
+                  <p>Border color (hover)</p>
+                  <ColorPicker v-model="form.theme.dropdownBorderColorHover" />
+
+                  <p>Text color (hover)</p>
+                  <ColorPicker v-model="form.theme.dropdownTextColorHover" />
+
+                  <p>Padding (px)</p>
+                  <input type="number" v-model="form.theme.dropdownPadding" />
+                </AccordionContent>
+              </AccordionPanel>
+
+            </Accordion>
           </div>
         </TabPanel>
 
         <!-- CSS Edit -->
         <TabPanel value="css">
           <div class="p-4">
-            <AceEditor />
+            <div class="border border-blue-600 bg-blue-100 p-1 text-blue-600 flex items-center justify-center rounded-sm cursor-pointer hover:bg-blue-200 transition-all duration-300"
+                 @click="setPickMode()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-index" viewBox="0 0 16 16">
+                <path d="M6.75 1a.75.75 0 0 1 .75.75V8a.5.5 0 0 0 1 0V5.467l.086-.004c.317-.012.637-.008.816.027.134.027.294.096.448.182.077.042.15.147.15.314V8a.5.5 0 1 0 1 0V6.435l.106-.01c.316-.024.584-.01.708.04.118.046.3.207.486.43.081.096.15.19.2.259V8.5a.5.5 0 0 0 1 0v-1h.342a1 1 0 0 1 .995 1.1l-.271 2.715a2.5 2.5 0 0 1-.317.991l-1.395 2.442a.5.5 0 0 1-.434.252H6.035a.5.5 0 0 1-.416-.223l-1.433-2.15a1.5 1.5 0 0 1-.243-.666l-.345-3.105a.5.5 0 0 1 .399-.546L5 8.11V9a.5.5 0 0 0 1 0V1.75A.75.75 0 0 1 6.75 1M8.5 4.466V1.75a1.75 1.75 0 1 0-3.5 0v5.34l-1.2.24a1.5 1.5 0 0 0-1.196 1.636l.345 3.106a2.5 2.5 0 0 0 .405 1.11l1.433 2.15A1.5 1.5 0 0 0 6.035 16h6.385a1.5 1.5 0 0 0 1.302-.756l1.395-2.441a3.5 3.5 0 0 0 .444-1.389l.271-2.715a2 2 0 0 0-1.99-2.199h-.581a5 5 0 0 0-.195-.248c-.191-.229-.51-.568-.88-.716-.364-.146-.846-.132-1.158-.108l-.132.012a1.26 1.26 0 0 0-.56-.642 2.6 2.6 0 0 0-.738-.288c-.31-.062-.739-.058-1.05-.046zm2.094 2.025"/>
+              </svg>
+            </div>
+
+            <div v-if="highlightElement">
+              <p class="!mt-2 pt-0">CLASS</p>
+              <input type="text">
+              <p class="!mt-2">ID</p>
+              <input type="text" class="mb-2">
+            </div>
+
+            <div ref="highlight" class="fixed border border-purple-500 bg-purple-200 bg-opacity-25 pointer-events-none" style="display: none;"
+                 :class="{'!bg-orange-300 !border-orange-600 !bg-opacity-25' : highlightElement}"></div>
+            
+            <AceEditor v-model="form.css" class="shadow-sm border rounded-sm mt-4" />
+
+            <p>Color picker</p>
+            <ColorPicker />
+
           </div>
         </TabPanel>
 
@@ -208,14 +355,21 @@ import TabList from 'primevue/tablist';
 import Tab from 'primevue/tab';
 import TabPanels from 'primevue/tabpanels';
 import TabPanel from 'primevue/tabpanel';
+import Accordion from 'primevue/accordion';
+import AccordionPanel from 'primevue/accordionpanel';
+import AccordionHeader from 'primevue/accordionheader';
+import AccordionContent from 'primevue/accordioncontent';
 import Select from 'primevue/select';
 import InputText from 'primevue/inputtext';
 import AceEditor from './AceEditor.vue';
-import ColorPicker from 'primevue/colorpicker';
 import Checkbox from 'primevue/checkbox';
+import ColorPicker from './ColorPicker.vue';
+import FontPicker from './FontPicker.vue';
+
 
 export default {
   name: 'RightSidebar',
+  inject: ['formInteract'],
   components: {
     Tabs,
     TabList,
@@ -227,6 +381,12 @@ export default {
     AceEditor,
     ColorPicker,
     Checkbox,
+    ColorPicker,
+    FontPicker,
+    Accordion,
+    AccordionPanel,
+    AccordionHeader,
+    AccordionContent,
   },
   props: {
     form: {
@@ -240,6 +400,10 @@ export default {
   },
   data() {
     return {
+
+      // Highlighted HTML element for CSS editor
+      highlightElement: null,
+      picking: false,
 
       // Store data from element in here to update the form
       selectedElement: {
@@ -277,8 +441,111 @@ export default {
       ],
     };
   },
-  emits: ['select'],
+  emits: ['select', 'openConditionEditor'],
   methods: {
+
+    /**
+     * Leave CSS Menu
+     */
+    leaveCSSMenu() {
+      // Remove listeners
+      document.removeEventListener('mousemove', this.handleMouseMove);
+      document.removeEventListener('mousedown', this.handleClick);
+      removeEventListener("resize", this.highlightUpdate);
+      document.querySelector('#content').removeEventListener("scroll", this.highlightUpdate);
+      this.formInteract = true;
+      this.picking = false;
+      this.highlightElement = null;
+      this.$refs.highlight.style.display = 'none';
+    },
+
+    /**
+     * Enter CSS menu
+     */
+    enterCSSMenu() {
+      this.formInteract = false;
+    },
+
+    /**
+     * Set mode to pick HTML element
+     */
+    setPickMode() {
+
+      this.highlightElement = null;
+      this.picking = true;
+
+      // Store bound function references
+      this.handleMouseMove = (event) => this.highlight(event);
+      this.handleClick = (event) => this.pickSelect(event);
+      this.highlightUpdate = (event) => this.updateHighlighter(event);
+
+
+      // Add listeners with stored references
+      addEventListener("resize", this.highlightUpdate);
+      document.querySelector('#content').addEventListener("scroll", this.highlightUpdate);
+      document.addEventListener('mousemove', this.handleMouseMove);
+      
+      this.$nextTick(() => {
+        document.addEventListener('mousedown', this.handleClick);
+      });
+    },
+
+    /**
+     * Highlight element in pick mode
+     */
+    highlight(event) {
+      const target = event.target;
+      const highlighter = this.$refs.highlight;
+
+      // Check if element hovered over is in the form
+      if (target.closest('.formContainer')) {
+        highlighter.style.display = 'block';
+        // Move highlighter to target
+        highlighter.style.top = target.getBoundingClientRect().top + 'px';
+        highlighter.style.left = target.getBoundingClientRect().left + 'px';
+        highlighter.style.width = target.offsetWidth + 'px';
+        highlighter.style.height = target.offsetHeight + 'px';
+        highlighter.style.zIndex = 20; // Ensure it's on top
+      }
+
+      // If not make highlight invisible
+      else {
+        highlighter.style.display = 'none';
+      }
+    },
+
+    /**
+     * Update highlighter position based on current target
+     */
+    updateHighlighter() {
+      const highlighter = this.$refs.highlight;
+      if (this.highlightElement) {
+        highlighter.style.top = this.highlightElement.getBoundingClientRect().top + 'px';
+        highlighter.style.left = this.highlightElement.getBoundingClientRect().left + 'px';
+        highlighter.style.width = this.highlightElement.offsetWidth + 'px';
+        highlighter.style.height = this.highlightElement.offsetHeight + 'px';
+      }
+    },
+
+    /**
+     * Pick select
+     */
+    pickSelect(event) {
+
+      // Remove listeners
+      document.removeEventListener('mousemove', this.handleMouseMove);
+      document.removeEventListener('click', this.handleClick);
+
+      // Get target
+      const target = event.target;
+
+      // Check if highlight element has parent of class formContainer
+      if (target.closest('.formContainer') && this.picking) {
+        this.highlightElement = target;
+      }
+
+      this.picking = false;
+    },
 
     /**
      * Get the selected element
@@ -425,6 +692,30 @@ export default {
 
 <style scoped>
 
+/* input range have no shadow */
+input[type="range"] {
+  @apply shadow-none;
+}
+
+/* Accordion */
+:deep(.p-accordionpanel) {
+  border: none;
+  padding-top: 4px;
+  padding-block: 4px;
+  border-bottom: 1px solid #d7d7d7;
+}
+:deep(.p-accordionheader) {
+  border: none;
+  font-weight: 500;
+  font-size: 18px;
+}
+:deep(.p-accordioncontent-content) {
+  border: none;
+}
+:deep(.p-accordion) {
+  border-top: 1px solid #d7d7d7;
+}
+
 /* Input style */
 input {
   @apply
@@ -487,7 +778,11 @@ p {
 .p-tab-active {
   @apply
   bg-black
-  text-white;
+  text-white
+  !border-b-black
+  !border-l-black
+  !border-t-black
+  !border-r-black;
 }
 
 

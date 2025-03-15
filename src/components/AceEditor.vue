@@ -3,17 +3,16 @@
     <div id="editor" ref="aceEditor"></div>
   </div>
 </template>
-  
+
 <script>
 import ace from 'ace-builds'
 import 'ace-builds/src-noconflict/mode-css'
-import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/ext-language_tools'
 
 export default {
   name: 'AceEditor',
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: ''
     },
@@ -28,8 +27,7 @@ export default {
   },
   data() {
     return {
-      editor: null,
-      content: this.value
+      editor: null
     }
   },
   mounted() {
@@ -50,17 +48,16 @@ export default {
         tabSize: 2
       })
 
-      this.editor.setValue(this.content)
+      this.editor.setValue(this.modelValue, 1)
       
-      // Emit changes to parent
       this.editor.on('change', () => {
-        this.$emit('input', this.editor.getValue())
+        this.$emit('update:modelValue', this.editor.getValue())
       })
     }
   },
   watch: {
-    value(newValue) {
-      if (this.editor.getValue() !== newValue) {
+    modelValue(newValue) {
+      if (this.editor && this.editor.getValue() !== newValue) {
         this.editor.setValue(newValue, 1)
       }
     },
@@ -71,7 +68,7 @@ export default {
       this.editor.session.setMode(`ace/mode/${newMode}`)
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.editor) {
       this.editor.destroy()
       this.editor.container.remove()

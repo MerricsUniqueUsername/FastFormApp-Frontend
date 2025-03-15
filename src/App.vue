@@ -1,11 +1,17 @@
 <template>
   <div id="app" class="h-screen w-screen flex flex-col relative overflow-hidden">
 
+    <!-- View form -->
+    <Form ref="form" @close="formPreviewOpen = false" v-if="formPreviewOpen" :form="form" />
+
     <!-- Element list -->
-    <ElementList ref="element_list" v-show="elementListOpen" @addElement="handleAddElement" class="z-50" />
+    <ElementList ref="element_list" v-show="elementListOpen" @addElement="handleAddElement" class="z-40" />
+
+    <!-- Conditional builder -->
+    <ConditionBuilder v-show="conditionBuilderOpen" @close="conditionBuilderOpen = false" :variables="variables" :form="form" :selectedId="selectedId" ref="condition_builder" class="absolute z-50" />
 
     <!-- Topbar -->
-    <Topbar class="relative" />
+    <Topbar @openPreview="formPreviewOpen = true" class="relative" :form="form" />
 
     <!-- Body -->
     <div class="flex flex-col relative" style="height: calc(100% - 4rem);">
@@ -18,7 +24,7 @@
         <FormPreview ref="form_preview" :form="form" @select="setSelectedId" />
 
         <!-- Right Sidebar -->
-        <RightSidebar ref="right_sidebar" :form="form" @select="selectElement" :selectedId="selectedId" />
+        <RightSidebar ref="right_sidebar" :form="form" @select="selectElement" @openConditionEditor="openConditionEditor" :selectedId="selectedId" />
         
       </div>
     </div>
@@ -32,7 +38,9 @@ import LeftSidebar from './components/LeftSidebar.vue';
 import Topbar from './components/Topbar.vue';
 import FormPreview from './components/FormPreview.vue';
 import ElementList from './components/ElementList.vue';
-import AddQuestions from './components/AddQuestions.vue';
+import ConditionBuilder from './components/ConditionBuilder.vue';
+import Form from './components/Form.vue';
+import { computed, ref } from 'vue'
 
 export default {
   name: 'App',
@@ -41,11 +49,42 @@ export default {
     LeftSidebar,
     Topbar,
     FormPreview,
-    AddQuestions,
     ElementList,
+    ConditionBuilder,
+    Form,
+  },
+
+  // Provide
+  provide() {
+    return {
+      formInteract: ref(this.formInteract),
+    }
   },
 
   methods: {
+
+    /**
+     * Update variable list
+     */
+    getVariables() {
+      const variables = new Set();
+
+      this.form.elements.forEach((element) => {
+        if(element.name)
+          variables.add(element.name);
+      });
+
+      this.variables = Array.from(variables);
+    },
+
+    /**
+     * Open condition builder
+     * @param element 
+     */
+    openConditionEditor() {
+      this.conditionBuilderOpen = true;
+      this.$refs.condition_builder.loadConditions();
+    },
 
     /**
      * Set selected ID to highlight element in leftbar
@@ -76,6 +115,7 @@ export default {
       newElement.id = this.form.highestId;
       newElement.name = '',
       newElement.conditions = [];
+
       this.form.highestId++;
       this.form.elements.push(newElement);
       this.closeMenu();
@@ -111,6 +151,9 @@ export default {
 
       elementListOpen: false,
       selectedId: null,
+      conditionBuilderOpen: false,
+      formPreviewOpen: false,
+      formInteract: true,
 
       // Form data
       form: {
@@ -118,7 +161,52 @@ export default {
         description: '',
         highestId: 0,
         elements: [],
-      }
+        css: '',
+        theme: {
+          // Text
+          "headerColor": "333333",
+          "paragraphColor": "444444",
+          "questionColor": "222222",
+          "answerColor": "222222",
+          "fontFamily": "Arial",
+
+          // Input
+          "inputFontSize": 12,
+          "inputBackgroundColor": "ffffff",
+          "inputBorderColor": "cccccc",
+          "inputTextColor": "333333",
+          "inputPlaceholderColor": "999999",
+          "inputBackgroundColorHover": "f5f5f5",
+          "inputBorderColorHover": "bbbbbb",
+          "inputTextColorHover": "222222",
+          "inputPlaceholderColorHover": "777777",
+          "inputFocusBorderColor": "888888",
+          "inputFocusBackgroundColor": "ffffff",
+          "inputFocusTextColor": "222222",
+          "inputPadding": 5,
+          
+          // Dropdown menus
+          "dropdownFontSize": 12,
+          "dropdownBackgroundColor": "ffffff",
+          "dropdownBorderColor": "cccccc",
+          "dropdownTextColor": "333333",
+          "dropdownBackgroundColorHover": "f5f5f5",
+          "dropdownBorderColorHover": "bbbbbb",
+          "dropdownTextColorHover": "222222",
+          "dropdownPadding": 5,
+
+          // Other
+          "dividerColor": "d1d1d1",
+          "backgroundColor": "ffffff",
+          "questionSpacing": 10,
+          "borderRadius": 5,
+          "shadowSize": 0.5,
+        }
+
+      },
+
+      // Variables in elements
+      variables: [],
 
     }
   },
@@ -137,7 +225,18 @@ export default {
       this.closeMenu();
     });
 
+  },
+
+  // Watch for form changing
+  watch: {
+    form: {
+      handler() {
+        this.getVariables();
+      },
+      deep: true,
+    },
   }
+
 }
 </script>
 

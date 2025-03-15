@@ -1,16 +1,19 @@
 <template>
 
-  <!-- Custom menu -->
-  <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none">
-    <div class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2">
-      <AddButton @click="add" class="pointer-events-auto" />
-      <RemoveButton @click="remove" class="absolute left-0 top-[50%] -translate-y-1/2 -translate-x-full pointer-events-auto" />
-    </div>
-  </div>
+  <div>
 
-  <div ref="element" class="my-6">
-    <p @input="handleChange" ref="question" class="edit-text parent" v-text="element.question"/>
-    <Rating v-model="value" :stars="element.num" class="my-2" />
+    <!-- Custom menu -->
+    <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none">
+      <div class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2">
+        <AddButton @click="add" class="pointer-events-auto" />
+        <RemoveButton @click="remove" class="absolute left-0 top-[50%] -translate-y-1/2 -translate-x-full pointer-events-auto" />
+      </div>
+    </div>
+
+    <div ref="element" class="my-6">
+      <p @input="handleChange" ref="question" class="edit-text parent question" v-text="element.question"/>
+      <Rating v-model="value" :stars="element.num" class="my-2" />
+    </div>
   </div>
 
 </template>
@@ -42,7 +45,7 @@ export default {
       value: 0,
     }
   },
-  emits: ['change'],
+  emits: ['change', 'input'],
   methods: {
     add() {
       if(this.element.num >= 10) return;
@@ -85,6 +88,12 @@ export default {
         });
       },
       deep: true,
+    },
+    value: {
+      immediate: true,
+      handler(newVal) {
+        this.$emit('input', newVal);
+      }
     }
   }
 }

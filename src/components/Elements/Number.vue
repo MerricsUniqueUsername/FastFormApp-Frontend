@@ -1,7 +1,7 @@
 <template>
 
   <div class="my-6">
-    <p @input="handleChange" ref="question" class="edit-text parent" v-text="element.question"/>
+    <p @input="handleChange" ref="question" class="edit-text parent question" v-text="element.question"/>
     <InputNumber 
       class="" 
       :min="element.min"
@@ -15,6 +15,7 @@
       :showButtons="element.showButtons"
       :buttonLayout="element.buttonLayout"
       :placeholder="element.placeholder"
+      v-model="value"
     />
   </div>
 
@@ -43,12 +44,22 @@ export default {
       value: 0,
     }
   },
-  emits: ['change'],
+  emits: ['change', 'input'],
   methods: {
     handleChange() {
       const value = this.$refs.question.innerText;
       this.element.question = value;
       this.$emit('change');
+    }
+  },
+
+  // Watch for changes in value
+  watch: {
+    value: {
+      immediate: true,
+      handler(newVal) {
+        this.$emit('input', newVal);
+      }
     }
   }
 }

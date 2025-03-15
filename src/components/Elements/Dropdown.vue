@@ -1,34 +1,38 @@
 <template>
 
-  <!-- Custom menu -->
-  <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none z-10">
-    
-    <!-- Inputs -->
-    <div class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto text-white w-full border border-gray-400 rounded-sm">
-      <div class="w-full" @input="handleChange" v-for="(answers, index) in element.answers" :key="index" type="text">
-        <RemoveButton @click="removeAnswer(index)" class="absolute -translate-x-full translate-y-1/2" />
-        <input class="p-1 w-full text-black border-t border-t-gray-200" v-model="element.answers[index]">
+  <div>
+    <!-- Custom menu -->
+    <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none z-10">
+      
+      <!-- Inputs -->
+      <div class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto text-white w-full border border-gray-400 rounded-sm">
+        <div class="w-full" @input="handleChange" v-for="(answers, index) in element.answers" :key="index" type="text">
+          <RemoveButton @click="removeAnswer(index)" class="absolute -translate-x-full translate-y-1/2" />
+          <input class="p-1 w-full text-black border-t border-t-gray-200" v-model="element.answers[index]">
+        </div>
+        <AddButton class="translate-y-full bottom-0 absolute -translate-x-1/2 left-[50%] pointer-events-auto" @click="addAnswer" />
       </div>
-      <AddButton class="translate-y-full bottom-0 absolute -translate-x-1/2 left-[50%] pointer-events-auto" @click="addAnswer" />
+
     </div>
 
-  </div>
-
     <div ref="element" class="my-6">
-      <p @input="handleChange" ref="question" class="edit-text parent" v-text="element.question"/>
+      <p @input="handleChange" ref="question" class="edit-text parent question" v-text="element.question"/>
       <Select
         v-if="!element.multiselect"
         class="w-full"
         :options="element.answers"
         :placeholder="element.placeholder"
+        v-model="value"
       />
       <MultiSelect
         v-else
         class="w-full"
         :options="element.answers"
         :placeholder="element.placeholder"
+        v-model="value"
       />
     </div>
+  </div>
   
 </template>
   
@@ -62,7 +66,7 @@
         value: null,
       }
     },
-    emits: ['change'],
+    emits: ['change', 'input'],
     methods: {
       handleChange() {
         this.$emit('change');
@@ -104,6 +108,12 @@
           });
         },
         deep: true,
+      },
+      value: {
+        immediate: true,
+        handler(newVal) {
+          this.$emit('input', newVal);
+        }
       }
     }
   }

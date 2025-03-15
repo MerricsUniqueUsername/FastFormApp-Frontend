@@ -8,16 +8,16 @@
 
   <!-- Content -->
   <div class="w-2/3 h-full bg-gray-100 overflow-y-auto" id="content">
-    <div class="p-4 m-5 bg-white rounded-md shadow-sm border border-gray-300">
+    <div class="p-4 m-5 bg-white rounded-md shadow-sm border border-gray-300 formContainer">
 
       <!-- Form -->
-      <div ref="form" class="text-black m-16 relative">
+      <div ref="form" class="text-black m-16 relative form">
 
         <!-- Form elements -->
         <FormElement 
           @select="selectElement"
           @change="handleChange"
-          :editing="true" 
+          :editing="formInteract" 
           v-for="(element, index) in form.elements" 
           :key="index" 
           :element="element" 
@@ -36,6 +36,7 @@ import FormElement from './FormElement.vue'
 export default {
   name: 'FormPreview',
   emits: ['select'],
+  inject: ['formInteract'],
   components: {
     FormElement,
   },
@@ -116,6 +117,169 @@ export default {
       this.$refs.html_outline.style.width = `${htmlRect.width}px`;
       this.$refs.html_outline.style.height = `${htmlRect.height}px`;
 
+    },
+
+    /**
+     * Update CSS for manual CSS
+     */
+    updateCSS() {
+      // If DOM not loaded, return
+      if(Object.keys(this.$refs).length == 0) return;
+
+      // Add style tag to form ref it it does not exist
+      if(!this.$refs.form.querySelector('.customCSS')) {
+        const style = document.createElement('style');
+        style.classList.add('customCSS');
+        this.$refs.form.appendChild(style);
+      }
+
+      // Get style
+      const style = this.$refs.form.querySelector('style');
+      style.innerHTML = `.formContainer { ${this.form.css} }`;
+    },
+
+    /**
+     * Update the theme of the form
+     * @param theme 
+     */
+    updateTheme(theme) {
+
+      // If DOM not loaded, return
+      if(Object.keys(this.$refs).length == 0) return;
+
+      // Add style tag to form ref it it does not exist
+      if(!this.$refs.form.querySelector('style')) {
+        const style = document.createElement('style');
+        this.$refs.form.appendChild(style);
+      }
+
+      // Get style
+      const style = this.$refs.form.querySelector('style');
+      style.innerHTML = `
+        .form .element {
+          font-family: ${theme.fontFamily};
+        }
+        .form .element h1 {
+          color: #${theme.headerColor};
+        }
+        .form .element p {
+          color: #${theme.paragraphColor};
+        }
+        .form .element .question {
+          color: #${theme.questionColor};
+        }
+        .form .element input {
+          background-color: #${theme.inputBackgroundColor};
+          border: 1px solid #${theme.inputBorderColor};
+          color: #${theme.inputTextColor};
+          padding: ${theme.inputPadding}px;
+          font-size: ${theme.inputFontSize}px;
+          box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
+          border-radius: ${theme.borderRadius}px;
+        }
+        .form .element input::placeholder {
+          color: #${theme.inputPlaceholderColor};
+          font-size: ${theme.inputFontSize}px;
+        }
+        .form .element input:hover {
+          background-color: #${theme.inputBackgroundColorHover};
+          border-color: #${theme.inputBorderColorHover};
+          color: #${theme.inputTextColorHover};
+        }
+        .form .element input:hover::placeholder {
+          color: #${theme.inputPlaceholderColorHover};
+        }
+        .form .element input:focus {
+          background-color: #${theme.inputFocusBackgroundColor};
+          border-color: #${theme.inputFocusBorderColor};
+          color: #${theme.inputFocusTextColor};
+          outline: none;
+        }
+        .form .element textarea {
+          background-color: #${theme.inputBackgroundColor};
+          border: 1px solid #${theme.inputBorderColor};
+          color: #${theme.inputTextColor};
+          padding: ${theme.inputPadding}px;
+          font-size: ${theme.inputFontSize}px;
+          box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
+          border-radius: ${theme.borderRadius}px;
+        }
+        .form .element textarea::placeholder {
+          color: #${theme.inputPlaceholderColor};
+          font-size: ${theme.inputFontSize}px;
+        }
+        .form .element textarea:hover {
+          background-color: #${theme.inputBackgroundColorHover};
+          border-color: #${theme.inputBorderColorHover};
+          color: #${theme.inputTextColorHover};
+        }
+        .form .element textarea:hover::placeholder {
+          color: #${theme.inputPlaceholderColorHover};
+        }
+        .form .element textarea:focus {
+          background-color: #${theme.inputFocusBackgroundColor};
+          border-color: #${theme.inputFocusBorderColor};
+          color: #${theme.inputFocusTextColor};
+          outline: none;
+        }
+        .form .p-select.p-inputwrapper {
+          background-color: #${theme.inputBackgroundColor};
+          border: 1px solid #${theme.inputBorderColor};
+          color: #${theme.inputTextColor};
+          padding: ${theme.inputPadding}px;
+          font-size: ${theme.inputFontSize}px;
+          cursor: pointer;
+        }
+        .form .p-select.p-inputwrapper:hover {
+          background-color: #${theme.inputBackgroundColorHover};
+          border-color: #${theme.inputBorderColorHover};
+          color: #${theme.inputTextColorHover};
+        }
+        :deep(.p-select-list-container) {
+          background-color: red !important;
+        }
+        .form .p-select-list-container .p-select-option {
+          padding: ${theme.dropdownPadding}px;
+        }
+        .form .p-select-list-container .p-select-option:hover {
+          background-color: #${theme.dropdownBackgroundColorHover};
+          border-color: #${theme.dropdownBorderColorHover};
+          color: #${theme.dropdownTextColorHover};
+        }
+        .divider {
+          border-color: #${theme.dividerColor};
+        }
+        .formContainer {
+          background-color: #${theme.backgroundColor};
+        }
+      `;
+
+    }
+  },
+
+  // Watch for changes in form
+  watch: {
+    form: {
+      deep: true,
+      handler() {
+        this.updateSelector();
+      }
+    },
+    'form.theme': {
+      handler(newTheme) {
+        if(newTheme) {
+          this.updateTheme(newTheme);
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    'form.css': {
+      handler(newCSS) {
+        this.updateCSS();
+      },
+      deep: true,
+      immediate: true
     }
   },
 
@@ -130,6 +294,12 @@ export default {
     window.onresize = () => {
       this.updateSelector();
     }
+
+    // Wait a tick then update theme
+    this.$nextTick(() => {
+      this.updateTheme(this.form.theme);
+      this.updateCSS();
+    });
 
   }
 }
@@ -248,12 +418,10 @@ textarea {
 /* Number input */
 .p-inputnumber {
   @apply 
-  input-border
-  shadow
-  transition
-  padding
-  input-color
   w-full;
+}
+.p-inputnumber input {
+  @apply rounded-sm;
 }
 .p-inputnumber-increment-button, .p-inputnumber-decrement-button {
   @apply 
