@@ -62,6 +62,7 @@ export default {
   data() {
     return {
       selected: false,
+      htmlStructure: null,
       value: "",
       componentMap: {
         'h1': 'Header1',
@@ -86,7 +87,6 @@ export default {
 
     /**
      * Handles input change
-     *
      */
     input(value) {
       this.value = value;
@@ -129,11 +129,99 @@ export default {
       if (htmlTarget) {
         this.$emit('select', this.element, htmlTarget)
       }
+    },
+
+    /**
+     * Distribute all givenClass and givenId to their elements
+     */
+    distributeAttributes() {
+      this.element.classIdPaths.forEach((item) => {
+        const element = this.locateElement(item.path)
+        if (element) {
+          if (item.givenClass) {
+            element.setAttribute('givenClass', item.givenClass);
+            element.className += ' ' + item.givenClass; // Set class name to givenClass value
+          }
+          if (item.givenId) {
+            element.setAttribute('givenId', item.givenId);
+            element.id = item.givenId; // Set id to givenId value
+          }
+        }
+      });
+    },
+
+    /**
+     * Update HTML structure
+     */
+    updateHTMLStructure() {
+      this.element.classIdPaths = this.getHTMLStructure(this.$refs.element)
+    },
+
+    /**
+     * Locate an HTML element with a path
+     * @param path - Path to the element in the HTML structure as array of numbers
+     * @return {Element} - The target element at the specified path
+     */
+    locateElement(path) {
+      let currentNode = this.$refs.element;
+
+      for(let i = 0; i < path.length; i++) {
+        currentNode = currentNode.children[path[i]];
+      }
+      return currentNode;
+    },
+
+
+    /**
+     * Get paths to elements with givenClass or givenId attributes
+     * @param {Element} element - Root DOM element to scan
+     * @return {Array} Array of objects containing path arrays and attribute values
+     */
+    getHTMLStructure(element) {
+      const results = [];
+      
+      // Recursive function to process nodes and build paths
+      function processNode(node, currentPath = []) {
+        // Skip non-element and comment nodes
+        if (node.nodeType !== Node.ELEMENT_NODE || node.nodeType === Node.COMMENT_NODE) {
+          return;
+        }
+        
+        // Check if this node has either givenClass or givenId
+        const givenClass = node.attributes['givenClass'] ? node.attributes['givenClass'].value : '';
+        const givenId = node.attributes['givenId'] ? node.attributes['givenId'].value : '';
+        
+        // If node has either attribute, add it to results
+        if (givenClass || givenId) {
+          results.push({
+            path: [...currentPath],
+            givenClass,
+            givenId
+          });
+        }
+        
+        // Process children with updated path
+        const children = Array.from(node.childNodes).filter(child => 
+          child.nodeType === Node.ELEMENT_NODE
+        );
+        
+        children.forEach((child, index) => {
+          processNode(child, [...currentPath, index]);
+        });
+      }
+      
+      // Start processing from the root
+      processNode(element);
+      
+      return results;
     }
   },
   mounted() {
     this.setupEditMode()
     this.loadElements()
+    this.$nextTick(() => {
+      this.updateHTMLStructure();
+    })
   },
   beforeUnmount() {
     // Clean up event listener
@@ -147,6 +235,15 @@ export default {
     value: {
       handler(newVal) {
         this.$emit('input')
+      },
+      deep: true
+    },
+    // Watch for element type to change
+    element: {
+      handler(newVal) {
+        this.$nextTick(() => {
+          this.distributeAttributes();
+        })
       },
       deep: true
     }

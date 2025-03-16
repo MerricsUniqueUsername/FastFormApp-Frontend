@@ -40,6 +40,8 @@ import ElementLogo from './ElementLogo.vue';
 
 export default {
   emits: ['openMenu', 'select'],
+  name: 'LeftSidebar',
+  inject: ['formInteract'],
   components: {
     ElementLogo,
   },
@@ -60,6 +62,9 @@ export default {
   },
   methods: {
     startDrag(index) {
+      if(!this.formInteract) {
+        return;
+      }
       this.draggedElementIndex = index; // Save the index of the dragged item
     },
     dragOver(targetIndex) {

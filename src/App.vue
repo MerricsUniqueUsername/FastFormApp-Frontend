@@ -115,6 +115,7 @@ export default {
       newElement.id = this.form.highestId;
       newElement.name = '',
       newElement.conditions = [];
+      newElement.classIdPaths = [],
 
       this.form.highestId++;
       this.form.elements.push(newElement);

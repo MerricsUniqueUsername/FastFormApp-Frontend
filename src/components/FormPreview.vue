@@ -1,10 +1,10 @@
 <template>
 
   <!-- Selector for element -->
-  <div ref="outline" class="fixed border border-dashed z-20 border-gray-500 pointer-events-none"></div>
+  <div v-show="formInteract" ref="outline" class="fixed border border-dashed z-20 border-gray-500 pointer-events-none"></div>
 
   <!-- Selector for HTML element -->
-  <div ref="html_outline" v-show="selectedHTMLElement" class="fixed border z-30 border-blue-400 pointer-events-none"></div>
+  <div ref="html_outline" v-show="selectedHTMLElement && formInteract" class="fixed border z-30 border-blue-400 pointer-events-none"></div>
 
   <!-- Content -->
   <div class="w-2/3 h-full bg-gray-100 overflow-y-auto" id="content">

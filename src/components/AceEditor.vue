@@ -52,6 +52,9 @@ export default {
       
       this.editor.on('change', () => {
         this.$emit('update:modelValue', this.editor.getValue())
+        this.$nextTick(() => { // Ensure the DOM is updated before emitting
+          this.$emit('input', this.editor.getValue())
+        })
       })
     }
   },
