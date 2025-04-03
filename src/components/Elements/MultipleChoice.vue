@@ -16,7 +16,7 @@
         <p v-if="!multiselect" @input="handleAnswerChange(index, $event.target)" class="parent w-full edit-text" :for="'radio-' + index">{{ answer }}</p>
 
         <!-- Multi select -->
-        <Checkbox v-if="multiselect" :id="'checkbox-' + index" :value="answer" v-model="value" />
+        <Checkbox v-if="multiselect" :id="'checkbox-' + index" :value="answer" v-model="checkValue" />
         <p v-if="multiselect" @input="handleAnswerChange(index, $event.target)" class="parent w-full edit-text" :for="'checkbox-' + index">{{ answer }}</p>
 
         <RemoveButton v-if="selected" @click="removeAnswer(index)" class="pointer-events-auto absolute" />
@@ -42,6 +42,7 @@ export default {
   data() {
     return {
       value: null,
+      checkValue: [], // For multiselect, to keep track of selected answers
     };
   },
   props: {

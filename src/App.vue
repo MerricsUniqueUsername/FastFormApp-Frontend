@@ -185,6 +185,8 @@ export default {
           "inputFocusBackgroundColor": "ffffff",
           "inputFocusTextColor": "222222",
           "inputPadding": 5,
+          "selectedColor": "000000",
+          "selectedFontColor": "ffffff",
           
           // Dropdown menus
           "dropdownFontSize": 12,

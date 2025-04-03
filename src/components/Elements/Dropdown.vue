@@ -37,10 +37,10 @@
 </template>
   
 <script>
-  import Select from 'primevue/select';
+  import Select from '../Inputs/Select.vue';
   import AddButton from '../MenuParts/AddButton.vue';
   import RemoveButton from '../MenuParts/RemoveButton.vue';
-  import MultiSelect from 'primevue/multiselect';
+  import MultiSelect from '../Inputs/MultiSelect.vue';
 
 
   export default {

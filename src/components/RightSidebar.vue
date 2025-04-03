@@ -235,9 +235,9 @@
                 </AccordionContent>
               </AccordionPanel>
 
-              <!-- Input boxes -->
+              <!-- Inputs -->
               <AccordionPanel value="input">
-                <AccordionHeader>Input boxes</AccordionHeader>
+                <AccordionHeader>Inputs</AccordionHeader>
                 <AccordionContent>
 
                   <p>Font size</p>
@@ -245,6 +245,12 @@
 
                   <p>Background color</p>
                   <ColorPicker v-model="form.theme.inputBackgroundColor" />
+
+                  <p>Selected background color</p>
+                  <ColorPicker v-model="form.theme.selectedColor" />
+
+                  <p>Selected text color</p>
+                  <ColorPicker v-model="form.theme.selectedFontColor" />
 
                   <p>Border color</p>
                   <ColorPicker v-model="form.theme.inputBorderColor" />

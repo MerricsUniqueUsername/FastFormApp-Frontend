@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Rating from 'primevue/rating';
+import Rating from '../Inputs/Rating.vue';
 import AddButton from '../MenuParts/AddButton.vue';
 import RemoveButton from '../MenuParts/RemoveButton.vue';
 

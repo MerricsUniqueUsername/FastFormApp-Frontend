@@ -127,15 +127,15 @@ export default {
       if(Object.keys(this.$refs).length == 0) return;
 
       // Add style tag to form ref it it does not exist
-      if(!this.$refs.form.querySelector('.customCSS')) {
+      if(!this.$refs.form.querySelector('style.customCSS')) {
         const style = document.createElement('style');
         style.classList.add('customCSS');
         this.$refs.form.appendChild(style);
       }
 
       // Get style
-      const style = this.$refs.form.querySelector('style');
-      style.innerHTML = `.formContainer { ${this.form.css} }`;
+      const style = this.$refs.form.querySelector('style.customCSS');
+      style.innerHTML = `#content .formContainer { ${this.form.css} }`;
     },
 
     /**
@@ -148,13 +148,14 @@ export default {
       if(Object.keys(this.$refs).length == 0) return;
 
       // Add style tag to form ref it it does not exist
-      if(!this.$refs.form.querySelector('style')) {
+      if(!this.$refs.form.querySelector('style.theme')) {
         const style = document.createElement('style');
+        style.classList.add('theme');
         this.$refs.form.appendChild(style);
       }
 
       // Get style
-      const style = this.$refs.form.querySelector('style');
+      const style = this.$refs.form.querySelector('style.theme');
       style.innerHTML = `
         .form .element {
           font-family: ${theme.fontFamily};
@@ -168,25 +169,25 @@ export default {
         .form .element .question {
           color: #${theme.questionColor};
         }
-        .form .element input {
+        .form .element input, .form .input {
           background-color: #${theme.inputBackgroundColor};
           border: 1px solid #${theme.inputBorderColor};
           color: #${theme.inputTextColor};
           padding: ${theme.inputPadding}px;
-          font-size: ${theme.inputFontSize}px;
+          font-size: ${theme.inputFontSize}px !important;
           box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
           border-radius: ${theme.borderRadius}px;
         }
-        .form .element input::placeholder {
+        .form .element input::placeholder, .form .input::placeholder {
           color: #${theme.inputPlaceholderColor};
           font-size: ${theme.inputFontSize}px;
         }
-        .form .element input:hover {
+        .form .element input:hover, .form .input:hover {
           background-color: #${theme.inputBackgroundColorHover};
           border-color: #${theme.inputBorderColorHover};
           color: #${theme.inputTextColorHover};
         }
-        .form .element input:hover::placeholder {
+        .form .element input:hover::placeholder, .form .placeholder {
           color: #${theme.inputPlaceholderColorHover};
         }
         .form .element input:focus {
@@ -222,36 +223,109 @@ export default {
           color: #${theme.inputFocusTextColor};
           outline: none;
         }
-        .form .p-select.p-inputwrapper {
-          background-color: #${theme.inputBackgroundColor};
-          border: 1px solid #${theme.inputBorderColor};
-          color: #${theme.inputTextColor};
-          padding: ${theme.inputPadding}px;
-          font-size: ${theme.inputFontSize}px;
-          cursor: pointer;
+
+        .form .menu {
+          background-color: #${theme.dropdownBackgroundColor};
+          border: 1px solid #${theme.dropdownBorderColor};
+          color: #${theme.dropdownTextColor};
+          box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});\
+          border-radius: ${theme.borderRadius}px;
+          font-size: ${theme.dropdownFontSize}px;
         }
-        .form .p-select.p-inputwrapper:hover {
-          background-color: #${theme.inputBackgroundColorHover};
-          border-color: #${theme.inputBorderColorHover};
-          color: #${theme.inputTextColorHover};
-        }
-        :deep(.p-select-list-container) {
-          background-color: red !important;
-        }
-        .form .p-select-list-container .p-select-option {
-          padding: ${theme.dropdownPadding}px;
-        }
-        .form .p-select-list-container .p-select-option:hover {
-          background-color: #${theme.dropdownBackgroundColorHover};
+        .form .menu:hover {
           border-color: #${theme.dropdownBorderColorHover};
+        }
+        .form .menu .menu-choice {
+          padding: ${theme.dropdownPadding}px;
+          cursor: pointer;
+          transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .form .menu .menu-choice:hover {
+          background-color: #${theme.dropdownBackgroundColorHover};
           color: #${theme.dropdownTextColorHover};
         }
-        .divider {
-          border-color: #${theme.dividerColor};
+        .form .selected-choice {
+          background-color: #${theme.inputTextColor}16;
+          color: #${theme.inputTextColor};
         }
-        .formContainer {
-          background-color: #${theme.backgroundColor};
+        .form .menu .menu-choice .checkbox {
+          border-color: #${theme.inputBorderColor};
+          background-color: #${theme.inputBackgroundColor};
+          box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
         }
+        .form .menu .menu-choice .checkbox:hover {
+          border-color: #${theme.inputBorderColorHover};
+          background-color: #${theme.inputBackgroundColorHover};
+        }
+        .form .menu .menu-choice .checkbox[selected = "true"] {
+          background-color: #${theme.selectedColor} !important;
+          border-color: #${theme.selectedColor} !important;
+          color: #${theme.selectedFontColor} !important;
+        }
+
+        .form .element .p-radiobutton.p-component {
+          border-color: #${theme.inputBorderColor};
+          background-color: #${theme.inputBackgroundColor};
+          box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
+        }
+        .form .element .p-radiobutton.p-component:hover {
+          border-color: #${theme.inputBorderColorHover};
+          background-color: #${theme.inputBackgroundColorHover};
+        }
+        .form .element .p-radiobutton-checked.p-component {
+          background-color: #${theme.selectedColor} !important;
+          border-color: #${theme.selectedColor} !important;
+        }
+
+        .form .element .p-checkbox.p-component {
+          border-color: #${theme.inputBorderColor};
+          background-color: #${theme.inputBackgroundColor};
+          box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
+        }
+        .form .element .p-checkbox.p-component:hover {
+          border-color: #${theme.inputBorderColorHover};
+          background-color: #${theme.inputBackgroundColorHover};
+        }
+        .form .element .p-checkbox-checked.p-component {
+          background-color: #${theme.selectedColor} !important;
+          border-color: #${theme.selectedColor} !important;
+        }
+
+        .form .scale-button {
+          background-color: #${theme.inputBackgroundColor} !important;
+          border-color: #${theme.inputBorderColor} !important;
+          color: #${theme.inputTextColor} !important;
+          box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01}) !important;
+        }
+        .form .scale-button:hover {
+          background-color: #${theme.inputBackgroundColorHover} !important;
+          border-color: #${theme.inputBorderColorHover} !important;
+          color: #${theme.inputTextColorHover} !important;
+        }
+        .form .scale-button.chosen {
+          background-color: #${theme.selectedColor} !important;
+          border-color: #${theme.selectedColor} !important;
+          color: #${theme.selectedFontColor} !important;
+        }
+
+        .form .star {
+          color: #${theme.selectedColor};
+          fill: #${theme.inputBackgroundColor};
+        }
+        .form .star:hover {
+          color: #${theme.selectedColor} !important;
+          fill: #${theme.selectedColor} !important;
+        }
+        .form .star svg[selected="true"] {
+          color: #${theme.selectedColor} !important;
+          fill: #${theme.selectedColor} !important;
+        }
+
+        input[type="range"] {
+          accent-color: #${theme.selectedColor};
+          box-shadow: none !important;
+        }
+        
       `;
 
     }
@@ -519,9 +593,7 @@ textarea {
 /* Slider (input range) */
 .slider {
   @apply
-  bg-gray-200
-  accent-black
-  w-[50%];
+  w-full;
 }
 
 /* Linear scale */

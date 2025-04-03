@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import DatePicker from 'primevue/datepicker';
+import DatePicker from '../Inputs/DatePicker.vue';
 
 export default {
   name: 'Date',
