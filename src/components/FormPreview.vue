@@ -498,8 +498,9 @@ export default {
 }
 .input-color {
   @apply
-  text-gray-800
-  bg-gray-50
+  text-gray-300
+  bg-gray-800
+  !border-gray-700;
 }
 .placeholder {
   @apply
@@ -527,15 +528,16 @@ export default {
   @apply
   shadow
   padding
-  bg-gray-50
+  bg-gray-900
+  !border-gray-700
   rounded-md
   input-border;
 }
 .dropdown-option {
   @apply
-  text-gray-600
-  hover:text-gray-900
-  hover:!bg-gray-100
+  text-gray-400
+  hover:text-gray-200
+  hover:!bg-gray-800
   transition
   duration-150
   rounded-sm
@@ -660,7 +662,17 @@ textarea {
 }
 .p-select-list-container .p-select-option {
   @apply 
-  dropdown-option;
+  dropdown-option
+}
+.p-select-option.p-focus {
+  @apply 
+  !bg-gray-800
+  !text-gray-200;
+}
+.p-select-option-selected {
+  @apply 
+  bg-gray-800
+  !text-gray-200;
 }
 
 /* Multiselect */

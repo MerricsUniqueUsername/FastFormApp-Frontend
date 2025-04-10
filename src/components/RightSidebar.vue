@@ -1,5 +1,5 @@
 <template>
-  <div class="w-1/4 h-full min-w-60 relative bg-gray-50 border-l border-l-gray-300 overflow-auto">
+  <div class="w-1/4 h-full min-w-60 relative bg-gray-900 text-gray-200 border-l border-l-gray-800 overflow-auto">
 
     <!-- Topbar tabs -->
     <Tabs value="question" style="height: 100%;">
@@ -13,10 +13,10 @@
         <TabPanel value="question">
 
           <!-- Question Edit -->
-          <div class="p-4">
+          <div class="p-4" v-if="selectedId !== null">
 
             <!-- Question type -->
-            <p style="margin-top: 0;">Type</p>
+            <p class="text-gray-400" style="margin-top: 0;">Type</p>
             <Select 
               value-type="model-value"
               input="type"
@@ -30,21 +30,23 @@
             />
 
             <!-- Variable name -->
-            <p>Variable name</p>
-            <input type="text" pattern="^[a-zA-Z_][a-zA-Z0-9_]*$" @input="updateSelectedElement" v-model="selectedElement.name" spellcheck="false">
+            <p class="text-gray-400">Variable name</p>
+            <input type="text" pattern="^[a-zA-Z_][a-zA-Z0-9_]*$" @input="updateSelectedElement" v-model="selectedElement.name" spellcheck="false"
+            class="w-full bg-gray-800 text-gray-300 text-sm rounded-md px-3 py-2 pl-8 border border-gray-700
+                 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
 
             <!-- Required -->
-            <p>Required</p>
+            <p class="text-gray-400">Required</p>
             <input type="checkbox" @change="updateSelectedElement" v-model="selectedElement.required" class="!h-4 !w-4 relative" />
 
             <!-- Conditions -->
-            <button class="w-full flex justify-end text-gray-500 hover:text-gray-700 cursor-pointer"
+            <button class="w-full flex justify-end text-gray-400 hover:text-gray-300 cursor-pointer"
                     @click="$emit('openConditionEditor')">
               Open condition editor
             </button>
 
             <!-- Divider -->
-            <div class="border-b border-gray-300 my-4"></div>
+            <div class="border-b border-gray-800 my-4"></div>
 
             <div class="placeholder-input" v-if="[ 'short-response', 'dropdown', 'number', 'date' ].includes(selectedElement.type)">
               <p>Placeholder</p>
@@ -60,18 +62,18 @@
 
             <!-- Options -->
             <div class="options" v-if="selectedElement.type === 'radio' || selectedElement.type === 'checkbox' || selectedElement.type === 'dropdown'">
-              <p>Options</p>
-              <div class="border border-gray-400 rounded-sm shadow-sm">
-                <div v-for="(answer, index) in selectedElement.answers" :key="index" class="flex items-center border-b border-b-gray-300">
-                  <div @click="removeOption(index)" class="w-4 h-4 rounded-sm cursor-pointer text-gray-500 hover:bg-gray-100 aspect-square flex justify-center items-center mx-2 border border-gray-400">
+              <p class="text-gray-400">Options</p>
+              <div class="border border-gray-600 rounded-sm shadow-sm bg-gray-800">
+                <div v-for="(answer, index) in selectedElement.answers" :key="index" class="option-list-element flex items-center border-b border-b-gray-700">
+                  <div @click="removeOption(index)" class="w-4 h-4 rounded-sm cursor-pointer text-gray-200 hover:bg-gray-100 aspect-square flex justify-center items-center mx-2 border border-gray-500">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
                     </svg>
                   </div>
-                  <input class="!shadow-none !border-none !text-gray-500" type="text" @input="updateSelectedElement" v-model="selectedElement.answers[index]" spellcheck="false">
+                  <input class="!shadow-none !border-none !text-gray-200" type="text" @input="updateSelectedElement" v-model="selectedElement.answers[index]" spellcheck="false">
                 </div>
               </div>
-              <div @click="addOption" class="w-full flex shadow-sm items-center justify-center cursor-pointer border border-gray-400 text-gray-500 hover:bg-gray-100 rounded-sm p-1 mt-1">
+              <div @click="addOption" class="w-full flex shadow-sm items-center justify-center cursor-pointer border border-gray-600 text-gray-500 hover:bg-gray-800 rounded-sm p-1 mt-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                 </svg>
@@ -186,6 +188,10 @@
             <br><br>
 
           </div>
+          
+          <div v-else class="p-4">
+            <p class="text-gray-400 text-center">Select an element to edit</p>
+          </div>
 
         </TabPanel>
 
@@ -208,8 +214,6 @@
                 <ColorPicker v-model="form.theme.accentColor" />
                 <p>Background color</p>
                 <ColorPicker v-model="form.theme.backgroundColor" />
-
-                <hr />
 
                 <p><strong>Input Elements</strong></p>
                 <p>Input background</p>
@@ -276,10 +280,10 @@
         <TabPanel value="css">
           <div class="p-4">
 
-            <div class="p-3 border border-gray-300 rounded-sm">
+            <div class="p-3 border border-gray-700 rounded-sm">
               <p class="!mt-0">Select element</p>
-              <div class="border border-blue-600 bg-blue-100 p-1 text-blue-600 flex items-center justify-center rounded-sm cursor-pointer hover:bg-blue-200 transition-all duration-300"
-                  :class="{'!bg-green-300 !border-green-600 text-green-600 !bg-opacity-25' : picking}"
+              <div class="border border-blue-600 bg-blue-600/20 bg-blue-100 p-1 text-blue-500 flex items-center justify-center rounded-sm cursor-pointer hover:bg-blue-500/30 transition-all duration-300"
+                  :class="{'!bg-green-900 !border-green-600 text-green-400' : picking}"
                   @click="setPickMode()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-index" viewBox="0 0 16 16">
                   <path d="M6.75 1a.75.75 0 0 1 .75.75V8a.5.5 0 0 0 1 0V5.467l.086-.004c.317-.012.637-.008.816.027.134.027.294.096.448.182.077.042.15.147.15.314V8a.5.5 0 1 0 1 0V6.435l.106-.01c.316-.024.584-.01.708.04.118.046.3.207.486.43.081.096.15.19.2.259V8.5a.5.5 0 0 0 1 0v-1h.342a1 1 0 0 1 .995 1.1l-.271 2.715a2.5 2.5 0 0 1-.317.991l-1.395 2.442a.5.5 0 0 1-.434.252H6.035a.5.5 0 0 1-.416-.223l-1.433-2.15a1.5 1.5 0 0 1-.243-.666l-.345-3.105a.5.5 0 0 1 .399-.546L5 8.11V9a.5.5 0 0 0 1 0V1.75A.75.75 0 0 1 6.75 1M8.5 4.466V1.75a1.75 1.75 0 1 0-3.5 0v5.34l-1.2.24a1.5 1.5 0 0 0-1.196 1.636l.345 3.106a2.5 2.5 0 0 0 .405 1.11l1.433 2.15A1.5 1.5 0 0 0 6.035 16h6.385a1.5 1.5 0 0 0 1.302-.756l1.395-2.441a3.5 3.5 0 0 0 .444-1.389l.271-2.715a2 2 0 0 0-1.99-2.199h-.581a5 5 0 0 0-.195-.248c-.191-.229-.51-.568-.88-.716-.364-.146-.846-.132-1.158-.108l-.132.012a1.26 1.26 0 0 0-.56-.642 2.6 2.6 0 0 0-.738-.288c-.31-.062-.739-.058-1.05-.046zm2.094 2.025"/>
@@ -298,7 +302,7 @@
             <div ref="highlight" class="fixed border border-purple-500 bg-purple-200 bg-opacity-25 pointer-events-none" style="display: none;"
                  :class="{'!bg-orange-300 !border-orange-600 !bg-opacity-25' : highlightElement}"></div>
             
-            <AceEditor @input="updateHighlighter()" v-model="form.css" class="shadow-sm border rounded-sm mt-4" />
+            <AceEditor @input="updateHighlighter()" v-model="form.css" class="shadow-sm rounded-md mt-4" />
 
             <p>Color picker</p>
             <ColorPicker />
@@ -741,7 +745,7 @@ input[type="range"] {
   border: none;
   padding-top: 4px;
   padding-block: 4px;
-  border-bottom: 1px solid #d7d7d7;
+  border-bottom: 1px solid oklch(27.8% 0.033 256.848);
 }
 :deep(.p-accordionheader) {
   border: none;
@@ -752,7 +756,7 @@ input[type="range"] {
   border: none;
 }
 :deep(.p-accordion) {
-  border-top: 1px solid #d7d7d7;
+  border-top: 1px solid oklch(27.8% 0.033 256.848);
 }
 
 /* Input style */
@@ -760,14 +764,15 @@ input {
   @apply
   w-full
   p-1.5
-  bg-gray-50
   border
-  border-gray-400
   rounded-sm
   shadow
   transition
   duration-300
-  text-gray-500;
+  bg-gray-800
+  border-gray-600
+  text-gray-200
+  focus:outline-none
 }
 
 .custom-tabs .p-tabview-nav {
@@ -779,6 +784,7 @@ input {
 p {
   margin-top: 20px;
   font-size: 16px !important;
+  @apply text-gray-400;
 }
 .p-tabpanels {
   @apply h-full;
@@ -794,34 +800,27 @@ p {
 /* Tabs */
 .p-tab {
   @apply
-  border-none
-  !border-r-gray-300
-  !border-l-gray-300
-  !border-b-gray-300
+  border-gray-600
+  w-[calc(100%/3-4px)]
+  m-0.5
+  p-1
   transition
-  duration-150;
-  border-left-style: solid !important;
-  border-bottom-style: solid !important;
-  border-right-style: solid !important;
-  border-left-width: 0.25px;
-  border-bottom-width: 0.25px;
-  border-right-width: 0.25px;
+  duration-150
+  border
+  rounded-md;
 }
 .p-tab:hover {
   @apply
-  border-none
-  !border-r-gray-300
-  !border-l-gray-300
-  !border-b-gray-300;
+  !border-blue-600
 }
 .p-tab-active {
   @apply
-  bg-black
+  bg-blue-600/20
   text-white
-  !border-b-black
-  !border-l-black
-  !border-t-black
-  !border-r-black;
+  !border-b-blue-600
+  !border-l-blue-600
+  !border-t-blue-600
+  !border-r-blue-600;
 }
 
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white border border-gray-400 rounded-sm shadow-sm p-1.5">
+  <div class="bg-gray-800 border border-gray-600 text-gray-400 rounded-sm shadow-sm p-1.5">
     #
     <input
       v-model="colorHEXInternal"
@@ -13,7 +13,7 @@
       format="hsb"
       @change="updateHEX"
       ref="color_picker"
-      class="w-12 float-right border border-gray-50 shadow-sm"
+      class="w-12 float-right shadow-sm"
     />
   </div>
 </template>
@@ -142,5 +142,10 @@ export default {
   border-radius: 2px;
   background-color: var(--p-colorpicker-preview-background);
   transition: background-color 0.2s ease;
+}
+:deep(input) {
+  border: none;
+  outline: none;
+  background: none;
 }
 </style>
