@@ -365,6 +365,7 @@ export default {
     return {
 
       // Highlighted HTML element for CSS editor
+      test: 'hello',
       highlightElement: null,
       picking: false,
       classPrevValue: '',

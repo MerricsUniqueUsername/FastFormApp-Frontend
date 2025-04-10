@@ -1,6 +1,6 @@
 <template>
   <div class="my-6">
-    <p @input="handleChange" ref="question" class="edit-text parent" v-text="element.question"/>
+    <p @input="handleChange" ref="question" class="edit-text parent" v-text="element.question" v-once/>
     
     <div class="flex gap-2">
       <!-- Country code selector -->

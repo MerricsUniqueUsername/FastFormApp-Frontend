@@ -6,16 +6,16 @@
     </div>
 
     <div ref="element" class="my-6">
-      <p @input="handleQuestionChange" ref="question" class="edit-text parent question" v-text="element.question"/>
+      <p @input="handleQuestionChange" ref="question" class="edit-text parent question" v-text="element.question" v-once/>
 
-      <div ref="answer" v-for="(answer, index) in element.answers" :key="index" class="flex items-center gap-2">
+      <div ref="answer" v-for="(answer, index) in element.answers" :key="index" class="flex items-center gap-2 select parent">
         <RadioButton 
           v-if="!multiselect" 
           :id="'radio-' + index" 
           name="multiple-choice" 
           :value="answer" 
           v-model="value" 
-          class="mt-1" 
+          class="mt-1"
         />
         <Checkbox 
           v-if="multiselect" 

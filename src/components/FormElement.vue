@@ -246,6 +246,7 @@ export default {
     }
   },
   mounted() {
+    console.log("FART")
     this.setupEditMode()
     this.loadElements()
     this.$nextTick(() => {
@@ -272,11 +273,12 @@ export default {
     element: {
       handler(newVal) {
         this.$nextTick(() => {
+          this.$emit('change');
           this.distributeAttributes();
         })
       },
       deep: true
-    }
+    },
   }
 }
 </script>
@@ -284,5 +286,14 @@ export default {
 <style scoped>
 .selected {
   @apply cursor-auto;
+}
+</style>
+
+<style>
+[contenteditable="true"] {
+  display: block;
+  white-space: pre-wrap;
+  word-wrap: break-word;   /* for old support */
+  overflow-wrap: break-word; /* modern browsers including Firefox */
 }
 </style>

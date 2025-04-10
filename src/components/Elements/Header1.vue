@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <h1 ref="header" class="edit-text" @input="handleChange" v-text="element.content" />
+    <h1 ref="header" class="edit-text" @input="handleChange" v-text="element.content" v-once></h1>
   </div>
   
 </template>

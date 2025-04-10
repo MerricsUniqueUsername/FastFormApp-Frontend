@@ -1,7 +1,7 @@
 <template>
 
   <div class="my-6">
-    <p @input="handleChange" ref="question" class="edit-text parent question" v-text="element.question"/>
+    <p @input="handleChange" ref="question" class="edit-text parent question" v-text="element.question" v-once/>
     <DatePicker 
       class="w-full"
       v-model="value"

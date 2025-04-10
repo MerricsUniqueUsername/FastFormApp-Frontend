@@ -10,7 +10,7 @@
     </div>
 
     <div ref="element" class="my-6">
-      <p @input="handleChange" ref="question" class="edit-text parent question" v-text="element.question" />
+      <p @input="handleChange" ref="question" class="edit-text parent question" v-text="element.question" v-once/>
 
       <!-- Scale -->
       <div class="w-full h-7 flex flex-col items-center mt-2">
@@ -34,8 +34,8 @@
 
       <!-- Labels -->
       <div class="w-full h-fit flex justify-between text-sm mt-0">
-        <p ref="labelMin" @input="handleChange" class="parent edit-text w-24">{{ element.labelMin }}</p>
-        <p ref="labelMax" @input="handleChange" class="parent edit-text w-24 text-right">{{ element.labelMax }}</p>
+        <p ref="labelMin" @input="handleChange" class="parent edit-text w-24" v-text="element.labelMin" v-once></p>
+        <p ref="labelMax" @input="handleChange" class="parent edit-text w-24 text-right" v-text="element.labelMax" v-once></p>
       </div>
     </div>
   </div>

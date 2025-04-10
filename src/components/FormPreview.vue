@@ -18,8 +18,8 @@
           @select="selectElement"
           @change="handleChange"
           :editing="formInteract" 
-          v-for="(element, index) in form.elements" 
-          :key="index" 
+          v-for="(element) in form.elements" 
+          :key="element.id" 
           :element="element" 
           ref="form_element"
         />

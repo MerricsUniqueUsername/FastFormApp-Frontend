@@ -20,7 +20,7 @@
         <div 
           v-if="showCalendar" 
           ref="calendar"
-          class="time-menu fixed z-50 my-1"
+          class="time-menu fixed z-[550] my-1"
           :class="timeOnly ? 'w-64' : 'w-72'"
           :style="calendarPosition"
         >
