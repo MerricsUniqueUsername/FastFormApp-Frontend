@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed w-screen h-screen overflow-auto bg-white z-50 formContainer">
+  <div class="fixed w-screen h-screen overflow-auto bg-white z-[500] formContainer" id="content">
 
     <!-- Close button -->
     <button class="absolute top-0 right-0 p-2" @click="$emit('close')">
@@ -19,6 +19,7 @@
         :element="element" 
         ref="form_element"
         @input="updateAnswers"
+        :view="true"
       />
         
     </div>
@@ -50,6 +51,16 @@ export default {
   },
 
   methods: {
+
+    /**
+     * Create CSS tag for theme.css
+     */
+    createCSSTag() {
+      var style = document.createElement('style');
+      style.innerHTML = `.formContainer#content { ${this.form.css} }`;
+      this.$refs.form.appendChild(style);
+    },
+
 
     /**
      * Update answers and variable answers for form
@@ -181,7 +192,7 @@ export default {
 
         // Check if all conditions are met
         if(conditionGroups.length > 0) {
-          var visible = this.evaluateConditions(conditionGroups, this.variableAnswers);
+          var visible = this.evaluateConditions(conditionGroups, this.variableAnswers, element.element.type);
           if(visible) {
             htmlElement.style.display = '';
           }
@@ -222,6 +233,14 @@ export default {
               return numericField > numericTarget;
             case 'less_than':
               return numericField < numericTarget;
+            case 'contains':
+              return fieldValue.includes(targetValue);
+            case 'not_contains':
+              return !fieldValue.includes(targetValue);
+            case 'is_empty':
+              return !fieldValue;
+            case 'is_not_empty':
+              return !!fieldValue;
             default:
               console.warn(`Unknown operator: ${condition.operator}`);
               return false;
@@ -253,6 +272,9 @@ export default {
 
     // Load variable text inputs
     this.loadVariablesTextInput(this.variables);
+
+    // Create CSS tag
+    this.createCSSTag();
   },
 
   /**

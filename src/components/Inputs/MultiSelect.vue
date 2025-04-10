@@ -11,7 +11,7 @@
             :key="index"
             class="selected-choice flex items-center bg-blue-100 text-blue-800 rounded px-2 py-1 text-sm"
           >
-            <span class="truncate">{{ selected }}</span>
+            <span class="truncate needed">{{ selected }}</span>
             <button 
               @click.stop="removeValue(selected)" 
               class="ml-1"
@@ -22,7 +22,7 @@
             </button>
           </div>
         </template>
-        <span v-else class="text-gray-400 truncate placeholder">{{ placeholder }}</span>
+        <span v-else class="text-gray-400 truncate placeholder needed">{{ placeholder }}</span>
       </div>
       <svg 
         class="w-5 h-5 text-gray-400 flex-shrink-0" 

@@ -157,6 +157,15 @@ export default {
       // Get style
       const style = this.$refs.form.querySelector('style.theme');
       style.innerHTML = `
+
+        .formContainer {
+          background-color: #${theme.backgroundColor};
+        }
+
+        .form .divider {
+          border-color: #${theme.borderColor};
+        }
+
         .form .element {
           font-family: ${theme.fontFamily};
         }
@@ -164,76 +173,120 @@ export default {
           color: #${theme.headerColor};
         }
         .form .element p {
-          color: #${theme.paragraphColor};
+          color: #${theme.textColor};
         }
         .form .element .question {
-          color: #${theme.questionColor};
+          color: #${theme.textColor};
         }
         .form .element input, .form .input {
-          background-color: #${theme.inputBackgroundColor};
-          border: 1px solid #${theme.inputBorderColor};
-          color: #${theme.inputTextColor};
+          background-color: #${theme.inputBaseBackground};
+          border: 1px solid #${theme.borderColor};
+          color: #${theme.textColor};
           padding: ${theme.inputPadding}px;
           font-size: ${theme.inputFontSize}px !important;
           box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
           border-radius: ${theme.borderRadius}px;
         }
         .form .element input::placeholder, .form .input::placeholder {
-          color: #${theme.inputPlaceholderColor};
+          color: #${theme.placeholderColor} !important;
           font-size: ${theme.inputFontSize}px;
         }
         .form .element input:hover, .form .input:hover {
-          background-color: #${theme.inputBackgroundColorHover};
-          border-color: #${theme.inputBorderColorHover};
-          color: #${theme.inputTextColorHover};
+          background-color: #${theme.hoverBackground};
+          border-color: #${theme.hoverBorderColor};
+          color: #${theme.textColor};
         }
-        .form .element input:hover::placeholder, .form .placeholder {
-          color: #${theme.inputPlaceholderColorHover};
+        .form .element input:hover::placeholder, .form .input:hover .placeholder {
+          color: #${theme.hoverPlaceholderColor} !important;
+        }
+
+        .form .placeholder {
+          color: #${theme.placeholderColor} !important;
+          font-size: ${theme.inputFontSize}px !important;
         }
         .form .element input:focus {
-          background-color: #${theme.inputFocusBackgroundColor};
-          border-color: #${theme.inputFocusBorderColor};
-          color: #${theme.inputFocusTextColor};
+          background-color: #${theme.hoverBackground};
+          border-color: #${theme.focusBorderColor};
+          color: #${theme.textColor};
           outline: none;
         }
         .form .element textarea {
-          background-color: #${theme.inputBackgroundColor};
-          border: 1px solid #${theme.inputBorderColor};
-          color: #${theme.inputTextColor};
+          background-color: #${theme.inputBaseBackground};
+          border: 1px solid #${theme.borderColor};
+          color: #${theme.textColor};
           padding: ${theme.inputPadding}px;
           font-size: ${theme.inputFontSize}px;
           box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
           border-radius: ${theme.borderRadius}px;
         }
         .form .element textarea::placeholder {
-          color: #${theme.inputPlaceholderColor};
+          color: #${theme.placeholderColor};
           font-size: ${theme.inputFontSize}px;
         }
         .form .element textarea:hover {
-          background-color: #${theme.inputBackgroundColorHover};
-          border-color: #${theme.inputBorderColorHover};
-          color: #${theme.inputTextColorHover};
+          background-color: #${theme.hoverBackground};
+          border-color: #${theme.hoverBorderColor};
+          color: #${theme.textColor};
         }
         .form .element textarea:hover::placeholder {
-          color: #${theme.inputPlaceholderColorHover};
+          color: #${theme.hoverPlaceholderColor};
         }
         .form .element textarea:focus {
-          background-color: #${theme.inputFocusBackgroundColor};
-          border-color: #${theme.inputFocusBorderColor};
-          color: #${theme.inputFocusTextColor};
+          background-color: #${theme.hoverBackground};
+          border-color: #${theme.focusBorderColor};
+          color: #${theme.textColor};
           outline: none;
         }
 
         .form .menu {
-          background-color: #${theme.dropdownBackgroundColor};
-          border: 1px solid #${theme.dropdownBorderColor};
-          color: #${theme.dropdownTextColor};
-          box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});\
+          background-color: #${theme.backgroundColor};
+          border: 1px solid #${theme.borderColor};
+          color: #${theme.textColor};
+          box-shadow: 0px ${theme.dropdownShadowSize * 1.5}px ${theme.dropdownShadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.dropdownShadowSize * 0.01});\
           border-radius: ${theme.borderRadius}px;
           font-size: ${theme.dropdownFontSize}px;
         }
         .form .menu:hover {
-          border-color: #${theme.dropdownBorderColorHover};
+          border-color: #${theme.hoverBorderColor};
+        }
+        .time-menu {
+          background-color: #${theme.backgroundColor};
+          border: 1px solid #${theme.borderColor};
+          color: #${theme.textColor};
+          box-shadow: 0px ${theme.dropdownShadowSize * 1.5}px ${theme.dropdownShadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.dropdownShadowSize * 0.01});\
+          border-radius: ${theme.borderRadius}px;
+          font-family: ${theme.fontFamily};
+        }
+        .time-menu:hover {
+          border-color: #${theme.hoverBorderColor};        
+        }
+        .time-menu .time-header {
+          border-bottom: 1px solid #${theme.borderColor};
+        }
+        .time-menu .not-day-in-month {
+          color: #${theme.textColor}60;
+        }
+        .time-menu .selected-day {
+          background-color: #${theme.accentColor} !important;
+          color: #${theme.backgroundColor} !important;
+          border-radius: 100%;
+        }
+        .time-menu .unselected-day:hover {
+          background-color: #${theme.textColor}15 !important;
+          color: #${theme.textColor} !important;
+          border-radius: 100%;
+        }
+        .time-btn:hover {
+          background-color: #${theme.textColor}15 !important;
+          color: #${theme.textColor} !important;
+        }
+        .time-menu .am-pm-btn {
+          background-color: #${theme.textColor}15 !important;
+          color: #${theme.textColor} !important;
+        }
+        .time-menu .am-pm-btn:hover {
+          background-color: #${theme.textColor}35 !important;
+          color: #${theme.textColor} !important;
         }
         .form .menu .menu-choice {
           padding: ${theme.dropdownPadding}px;
@@ -241,89 +294,144 @@ export default {
           transition: background-color 0.2s ease, color 0.2s ease;
         }
         .form .menu .menu-choice:hover {
-          background-color: #${theme.dropdownBackgroundColorHover};
-          color: #${theme.dropdownTextColorHover};
+          background-color: #${theme.textColor}15;
+          color: #${theme.textColor};
         }
         .form .selected-choice {
-          background-color: #${theme.inputTextColor}16;
-          color: #${theme.inputTextColor};
+          background-color: #${theme.textColor}16;
+          color: #${theme.textColor};
         }
-        .form .menu .menu-choice .checkbox {
-          border-color: #${theme.inputBorderColor};
-          background-color: #${theme.inputBackgroundColor};
+        .form .checkbox {
+          border-color: #${theme.borderColor};
+          background-color: #${theme.inputBaseBackground};
           box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
         }
-        .form .menu .menu-choice .checkbox:hover {
-          border-color: #${theme.inputBorderColorHover};
-          background-color: #${theme.inputBackgroundColorHover};
+        .form .checkbox:hover {
+          border-color: #${theme.hoverBorderColor};
+          background-color: #${theme.hoverBackground};
         }
-        .form .menu .menu-choice .checkbox[selected = "true"] {
-          background-color: #${theme.selectedColor} !important;
-          border-color: #${theme.selectedColor} !important;
-          color: #${theme.selectedFontColor} !important;
+        .form .checkbox[selected = "true"] {
+          background-color: #${theme.accentColor} !important;
+          border-color: #${theme.accentColor} !important;
+          color: #${theme.backgroundColor} !important;
         }
 
         .form .element .p-radiobutton.p-component {
-          border-color: #${theme.inputBorderColor};
-          background-color: #${theme.inputBackgroundColor};
+          border-color: #${theme.borderColor};
+          background-color: #${theme.inputBaseBackground};
           box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
         }
         .form .element .p-radiobutton.p-component:hover {
-          border-color: #${theme.inputBorderColorHover};
-          background-color: #${theme.inputBackgroundColorHover};
+          border-color: #${theme.hoverBorderColor};
+          background-color: #${theme.hoverBackground};
         }
         .form .element .p-radiobutton-checked.p-component {
-          background-color: #${theme.selectedColor} !important;
-          border-color: #${theme.selectedColor} !important;
+          background-color: #${theme.accentColor} !important;
+          border-color: #${theme.accentColor} !important;
         }
 
         .form .element .p-checkbox.p-component {
-          border-color: #${theme.inputBorderColor};
-          background-color: #${theme.inputBackgroundColor};
+          border-color: #${theme.borderColor};
+          background-color: #${theme.inputBaseBackground};
           box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01});
         }
         .form .element .p-checkbox.p-component:hover {
-          border-color: #${theme.inputBorderColorHover};
-          background-color: #${theme.inputBackgroundColorHover};
+          border-color: #${theme.hoverBorderColor};
+          background-color: #${theme.hoverBackground};
         }
         .form .element .p-checkbox-checked.p-component {
-          background-color: #${theme.selectedColor} !important;
-          border-color: #${theme.selectedColor} !important;
+          background-color: #${theme.accentColor} !important;
+          border-color: #${theme.accentColor} !important;
         }
 
         .form .scale-button {
-          background-color: #${theme.inputBackgroundColor} !important;
-          border-color: #${theme.inputBorderColor} !important;
-          color: #${theme.inputTextColor} !important;
+          background-color: #${theme.inputBaseBackground} !important;
+          border-color: #${theme.borderColor} !important;
+          color: #${theme.textColor} !important;
           box-shadow: 0px ${theme.shadowSize * 1.5}px ${theme.shadowSize * 2.5}px rgba(0, 0, 0, ${0.2 + theme.shadowSize * 0.01}) !important;
         }
         .form .scale-button:hover {
-          background-color: #${theme.inputBackgroundColorHover} !important;
-          border-color: #${theme.inputBorderColorHover} !important;
-          color: #${theme.inputTextColorHover} !important;
+          background-color: #${theme.hoverBackground} !important;
+          border-color: #${theme.hoverBorderColor} !important;
+          color: #${theme.textColor} !important;
         }
         .form .scale-button.chosen {
-          background-color: #${theme.selectedColor} !important;
-          border-color: #${theme.selectedColor} !important;
-          color: #${theme.selectedFontColor} !important;
+          background-color: #${theme.accentColor} !important;
+          border-color: #${theme.accentColor} !important;
+          color: #${theme.backgroundColor} !important;
         }
 
         .form .star {
-          color: #${theme.selectedColor};
-          fill: #${theme.inputBackgroundColor};
+          color: #${theme.accentColor};
+          fill: #${theme.inputBaseBackground};
         }
         .form .star:hover {
-          color: #${theme.selectedColor} !important;
-          fill: #${theme.selectedColor} !important;
+          color: #${theme.accentColor} !important;
+          fill: #${theme.accentColor} !important;
         }
         .form .star svg[selected="true"] {
-          color: #${theme.selectedColor} !important;
-          fill: #${theme.selectedColor} !important;
+          color: #${theme.accentColor} !important;
+          fill: #${theme.accentColor} !important;
         }
 
-        input[type="range"] {
-          accent-color: #${theme.selectedColor};
-          box-shadow: none !important;
+        .form input[type="range"] {
+          -webkit-appearance: none;
+          appearance: none; 
+          width: 100%;
+          height: 6px;
+          border-radius: 15px;
+          background: #${theme.inputBaseBackground};
+          cursor: pointer;
+          outline: none;
+        }
+
+        .form input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none; 
+          height: 15px;
+          width: 15px;
+          background-color: #${theme.accentColor};
+          border-radius: 50%;
+          border: none;
+          transition: .2s ease-in-out;
+        }
+
+        .form input[type="range"]::-moz-range-thumb {
+          height: 15px;
+          width: 15px;
+          background-color: #${theme.accentColor};
+          border-radius: 50%;
+          border: none;
+          transition: .2s ease-in-out;
+        }
+
+        .form input[type="range"]::-webkit-slider-thumb:hover {
+          box-shadow: 0 0 0 10px rgba(${theme.accentColor}, .1);
+        }
+
+        .form input[type="range"]:active::-webkit-slider-thumb {
+          box-shadow: 0 0 0 13px rgba(${theme.accentColor}, .2);
+        }
+
+        .form input[type="range"]:focus::-webkit-slider-thumb {
+          box-shadow: 0 0 0 13px rgba(${theme.accentColor}, .2);
+        }
+
+        .form input[type="range"]::-moz-range-thumb:hover {
+          box-shadow: 0 0 0 10px rgba(${theme.accentColor}, .1);
+        }
+
+        .form input[type="range"]:active::-moz-range-thumb {
+          box-shadow: 0 0 0 13px rgba(${theme.accentColor}, .2);
+        }
+
+        .form input[type="range"]:focus::-moz-range-thumb {
+          box-shadow: 0 0 0 13px rgba(${theme.accentColor}, .2);
+        }
+
+
+        .form .input svg {
+          color: #${theme.textColor};
         }
         
       `;

@@ -5,7 +5,7 @@
     <Form ref="form" @close="formPreviewOpen = false" v-if="formPreviewOpen" :form="form" />
 
     <!-- Element list -->
-    <ElementList ref="element_list" v-show="elementListOpen" @addElement="handleAddElement" class="z-40" />
+    <ElementList ref="element_list" v-show="elementListOpen" @addElement="handleAddElement" class="z-[200]" />
 
     <!-- Conditional builder -->
     <ConditionBuilder v-show="conditionBuilderOpen" @close="conditionBuilderOpen = false" :variables="variables" :form="form" :selectedId="selectedId" ref="condition_builder" class="absolute z-50" />
@@ -164,47 +164,27 @@ export default {
         elements: [],
         css: '',
         theme: {
-          // Text
-          "headerColor": "333333",
-          "paragraphColor": "444444",
-          "questionColor": "222222",
-          "answerColor": "222222",
-          "fontFamily": "Arial",
-
-          // Input
-          "inputFontSize": 12,
-          "inputBackgroundColor": "ffffff",
-          "inputBorderColor": "cccccc",
-          "inputTextColor": "333333",
-          "inputPlaceholderColor": "999999",
-          "inputBackgroundColorHover": "f5f5f5",
-          "inputBorderColorHover": "bbbbbb",
-          "inputTextColorHover": "222222",
-          "inputPlaceholderColorHover": "777777",
-          "inputFocusBorderColor": "888888",
-          "inputFocusBackgroundColor": "ffffff",
-          "inputFocusTextColor": "222222",
-          "inputPadding": 5,
-          "selectedColor": "000000",
-          "selectedFontColor": "ffffff",
-          
-          // Dropdown menus
-          "dropdownFontSize": 12,
-          "dropdownBackgroundColor": "ffffff",
-          "dropdownBorderColor": "cccccc",
-          "dropdownTextColor": "333333",
-          "dropdownBackgroundColorHover": "f5f5f5",
-          "dropdownBorderColorHover": "bbbbbb",
-          "dropdownTextColorHover": "222222",
-          "dropdownPadding": 5,
-
-          // Other
-          "dividerColor": "d1d1d1",
+          "textColor": "5e5e5e",
+          "headerColor": "000000",
+          "accentColor": "4C9EFF",
+          "inputBaseBackground": "ffffff",
+          "borderColor": "cccccc",
+          "placeholderColor": "888888",
+          "hoverBackground": "f4f4f4",
+          "hoverBorderColor": "666666",
+          "hoverPlaceholderColor": "616161",
+          "focusBorderColor": "1A73E8",
           "backgroundColor": "ffffff",
-          "questionSpacing": 10,
-          "borderRadius": 5,
-          "shadowSize": 0.5,
-        }
+          "fontFamily": "Verdana",
+          "inputFontSize": 16,
+          "inputPadding": 12,
+          "dropdownFontSize": 15,
+          "dropdownPadding": 10,
+          "dropdownShadowSize": "2.5",
+          "questionSpacing": 16,
+          "borderRadius": "5",
+          "shadowSize": "0.5"
+        },
 
       },
 

@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <!-- Custom menu -->
     <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none">
@@ -10,15 +9,22 @@
       <p @input="handleQuestionChange" ref="question" class="edit-text parent question" v-text="element.question"/>
 
       <div ref="answer" v-for="(answer, index) in element.answers" :key="index" class="flex items-center gap-2">
-
-        <!-- Single select -->
-        <RadioButton v-if="!multiselect" :id="'radio-' + index" name="color" :value="answer" v-model="value" />
-        <p v-if="!multiselect" @input="handleAnswerChange(index, $event.target)" class="parent w-full edit-text" :for="'radio-' + index">{{ answer }}</p>
-
-        <!-- Multi select -->
-        <Checkbox v-if="multiselect" :id="'checkbox-' + index" :value="answer" v-model="checkValue" />
-        <p v-if="multiselect" @input="handleAnswerChange(index, $event.target)" class="parent w-full edit-text" :for="'checkbox-' + index">{{ answer }}</p>
-
+        <RadioButton 
+          v-if="!multiselect" 
+          :id="'radio-' + index" 
+          name="multiple-choice" 
+          :value="answer" 
+          v-model="value" 
+          class="mt-1" 
+        />
+        <Checkbox 
+          v-if="multiselect" 
+          :id="'checkbox-' + index" 
+          :value="answer" 
+          :modelValue="isValueSelected(answer)"
+          @update:modelValue="toggleValue(answer)"
+          class="mt-1" 
+        />
         <RemoveButton v-if="selected" @click="removeAnswer(index)" class="pointer-events-auto absolute" />
       </div>
     </div>
@@ -26,8 +32,8 @@
 </template>
 
 <script>
-import RadioButton from 'primevue/radiobutton';
-import Checkbox from 'primevue/checkbox';
+import RadioButton from '../Inputs/Radio.vue';
+import Checkbox from '../Inputs/Checkbox.vue';
 import AddButton from '../MenuParts/AddButton.vue';
 import RemoveButton from '../MenuParts/RemoveButton.vue';
 
@@ -41,8 +47,7 @@ export default {
   },
   data() {
     return {
-      value: null,
-      checkValue: [], // For multiselect, to keep track of selected answers
+      value: this.multiselect ? [] : null,
     };
   },
   props: {
@@ -101,13 +106,45 @@ export default {
         this.$emit('change', 'true');
       });
     },
+    // Helper methods for multiselect
+    isValueSelected(val) {
+      return this.multiselect ? this.value.includes(val) : this.value === val;
+    },
+    toggleValue(val) {
+      if (this.multiselect) {
+        if (this.value.includes(val)) {
+          // Remove value if already selected
+          this.value = this.value.filter(item => item !== val);
+        } else {
+          // Add value if not selected
+          this.value = [...this.value, val];
+        }
+      } else {
+        this.value = val;
+      }
+    }
+  },
+  created() {
+    // Initialize value as an array when in multiselect mode
+    if (this.multiselect && !Array.isArray(this.value)) {
+      this.value = [];
+    }
   },
   mounted() {
-
     // Load custom menu
     this.updateCustomMenu();
     window.addEventListener('resize', this.updateCustomMenu);
     document.getElementById('content').addEventListener('scroll', this.updateCustomMenu);
+
+    this.$nextTick(() => {
+
+      // Delete spans that find themself in here somehow if they do not have the class "needed"
+      const spans = this.$refs.element.querySelectorAll('span:not(.needed)');
+      spans.forEach(span => {
+        if(span.textContent === '')
+          span.remove();
+      });
+    });
   },
   watch: {
     element: {
@@ -122,6 +159,13 @@ export default {
       immediate: true,
       handler(newVal) {
         this.$emit('input', newVal);
+      }
+    },
+    multiselect: {
+      immediate: true,
+      handler(newVal) {
+        // Reset value when switching between single/multi select modes
+        this.value = newVal ? [] : null;
       }
     }
   }

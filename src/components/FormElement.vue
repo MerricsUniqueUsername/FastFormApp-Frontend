@@ -56,6 +56,10 @@ export default {
     editing: {
       type: Boolean,
       default: false
+    },
+    view: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['select', 'change', 'input'],
@@ -131,6 +135,7 @@ export default {
       }
     },
 
+
     /**
      * Distribute all givenClass and givenId to their elements
      */
@@ -139,9 +144,32 @@ export default {
         const element = this.locateElement(item.path)
         if (element) {
           if (item.givenClass) {
+            // Get the previous givenClass value
+            const previousGivenClass = element.getAttribute('givenClass');
+            
+            // Update the givenClass attribute
             element.setAttribute('givenClass', item.givenClass);
-            element.className += ' ' + item.givenClass; // Set class name to givenClass value
+            
+            // If there was a previous givenClass, replace the last occurrence with the new one
+            if (previousGivenClass && element.className.includes(previousGivenClass)) {
+              // Find the last occurrence of previousGivenClass in the className string
+              const lastIndex = element.className.lastIndexOf(previousGivenClass);
+              
+              if (lastIndex !== -1) {
+                // Replace only the last occurrence
+                const beforePart = element.className.substring(0, lastIndex);
+                const afterPart = element.className.substring(lastIndex + previousGivenClass.length);
+                element.className = beforePart + item.givenClass + afterPart;
+              }
+            } else {
+              // If no previous givenClass or it's not in the class string, just append
+              element.className += ' ' + item.givenClass;
+            }
+            
+            // Clean up any double spaces that might occur
+            element.className = element.className.replace(/\s+/g, ' ').trim();
           }
+          
           if (item.givenId) {
             element.setAttribute('givenId', item.givenId);
             element.id = item.givenId; // Set id to givenId value
@@ -154,6 +182,7 @@ export default {
      * Update HTML structure
      */
     updateHTMLStructure() {
+      if(this.view) return
       this.element.classIdPaths = this.getHTMLStructure(this.$refs.element)
     },
 
@@ -221,6 +250,7 @@ export default {
     this.loadElements()
     this.$nextTick(() => {
       this.updateHTMLStructure();
+      if(this.view) this.distributeAttributes()
     })
   },
   beforeUnmount() {

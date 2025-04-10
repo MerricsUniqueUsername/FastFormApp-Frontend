@@ -195,129 +195,80 @@
 
             <Accordion :value="[]" multiple>
 
-              <!-- Other -->
-              <AccordionPanel value="other">
+             <!-- Color Scheme -->
+            <AccordionPanel value="colors">
+              <AccordionHeader>Colors</AccordionHeader>
+              <AccordionContent>
+                <p><strong>Text & Background Colors</strong></p>
+                <p>Header color</p>
+                <ColorPicker v-model="form.theme.headerColor" />
+                <p>Text color</p>
+                <ColorPicker v-model="form.theme.textColor" />
+                <p>Accent color</p>
+                <ColorPicker v-model="form.theme.accentColor" />
+                <p>Background color</p>
+                <ColorPicker v-model="form.theme.backgroundColor" />
 
-                <!-- Text edit -->
-                <AccordionHeader>Other</AccordionHeader>
-                  <AccordionContent>
-                    <p>Background color</p>
-                    <ColorPicker v-model="form.theme.backgroundColor" />
-                    
-                    <p>Divider color</p>
-                    <ColorPicker v-model="form.theme.dividerColor" />
+                <hr />
 
-                    <p>Border radius</p>
-                    <input type="range" min="0" max="50" v-model="form.theme.borderRadius" />
-
-                    <p>Shadow scale</p>
-                    <input type="range" min="0" max="10" step="0.5" v-model="form.theme.shadowSize" />
-
-                  </AccordionContent>
-                </AccordionPanel>
-
-              <AccordionPanel value="text">
-
-                <!-- Text edit -->
-                <AccordionHeader>Text</AccordionHeader>
+                <p><strong>Input Elements</strong></p>
+                <p>Input background</p>
+                <ColorPicker v-model="form.theme.inputBaseBackground" />
+                <p>Border color</p>
+                <ColorPicker v-model="form.theme.borderColor" />
+                <p>Placeholder text</p>
+                <ColorPicker v-model="form.theme.placeholderColor" />
+                <p>Hover background</p>
+                <ColorPicker v-model="form.theme.hoverBackground" />
+                <p>Hover border</p>
+                <ColorPicker v-model="form.theme.hoverBorderColor" />
+                <p>Hover placeholder</p>
+                <ColorPicker v-model="form.theme.hoverPlaceholderColor" />
+                <p>Focus border</p>
+                <ColorPicker v-model="form.theme.focusBorderColor" />
+              </AccordionContent>
+            </AccordionPanel>
+              <!-- Typography -->
+              <AccordionPanel value="typography">
+                <AccordionHeader>Typography</AccordionHeader>
                 <AccordionContent>
                   <p>Font family</p>
                   <FontPicker v-model="form.theme.fontFamily" />
-
-                  <p>Header color</p>
-                  <ColorPicker v-model="form.theme.headerColor" />
-
-                  <p>Paragraph color</p>
-                  <ColorPicker v-model="form.theme.paragraphColor" />
-
-                  <p>Question color</p>
-                  <ColorPicker v-model="form.theme.questionColor" />
+                  <p>Input font size</p>
+                  <input type="number" v-model="form.theme.inputFontSize" />
+                  <p>Dropdown font size</p>
+                  <input type="number" v-model="form.theme.dropdownFontSize" />
                 </AccordionContent>
               </AccordionPanel>
 
-              <!-- Inputs -->
-              <AccordionPanel value="input">
-                <AccordionHeader>Inputs</AccordionHeader>
+              <!-- Spacing & Padding -->
+              <AccordionPanel value="spacing">
+                <AccordionHeader>Spacing & Padding</AccordionHeader>
                 <AccordionContent>
-
-                  <p>Font size</p>
-                  <input type="number" v-model="form.theme.inputFontSize" />
-
-                  <p>Background color</p>
-                  <ColorPicker v-model="form.theme.inputBackgroundColor" />
-
-                  <p>Selected background color</p>
-                  <ColorPicker v-model="form.theme.selectedColor" />
-
-                  <p>Selected text color</p>
-                  <ColorPicker v-model="form.theme.selectedFontColor" />
-
-                  <p>Border color</p>
-                  <ColorPicker v-model="form.theme.inputBorderColor" />
-
-                  <p>Text color</p>
-                  <ColorPicker v-model="form.theme.inputTextColor" />
-
-                  <p>Placeholder color</p>
-                  <ColorPicker v-model="form.theme.inputPlaceholderColor" />
-
-                  <p>Background color (hover)</p>
-                  <ColorPicker v-model="form.theme.inputBackgroundColorHover" />
-
-                  <p>Border color (hover)</p>
-                  <ColorPicker v-model="form.theme.inputBorderColorHover" />
-
-                  <p>Text color (hover)</p>
-                  <ColorPicker v-model="form.theme.inputTextColorHover" />
-
-                  <p>Placeholder color (hover)</p>
-                  <ColorPicker v-model="form.theme.inputPlaceholderColorHover" />
-
-                  <p>Focus border color</p>
-                  <ColorPicker v-model="form.theme.inputFocusBorderColor" />
-
-                  <p>Focus background color</p>
-                  <ColorPicker v-model="form.theme.inputFocusBackgroundColor" />
-
-                  <p>Focus text color</p>
-                  <ColorPicker v-model="form.theme.inputFocusTextColor" />
-
                   <p>Input padding (px)</p>
                   <input type="number" v-model="form.theme.inputPadding" />
+                  <p>Dropdown padding (px)</p>
+                  <input type="number" v-model="form.theme.dropdownPadding" />
+                  <p>Question spacing (px)</p>
+                  <input type="number" v-model="form.theme.questionSpacing" />
                 </AccordionContent>
               </AccordionPanel>
 
-              <!-- Dropdown menus -->
-              <AccordionPanel value="dropdown">
-                <AccordionHeader>Menus</AccordionHeader>
+              <!-- Borders & Shape -->
+              <AccordionPanel value="shape">
+                <AccordionHeader>Borders & Shape</AccordionHeader>
                 <AccordionContent>
-                  <p>Font size</p>
-                  <input type="number" v-model="form.theme.dropdownFontSize" />
-
-                  <p>Background color</p>
-                  <ColorPicker v-model="form.theme.dropdownBackgroundColor" />
-
-                  <p>Border color</p>
-                  <ColorPicker v-model="form.theme.dropdownBorderColor" />
-
-                  <p>Text color</p>
-                  <ColorPicker v-model="form.theme.dropdownTextColor" />
-
-                  <p>Background color (hover)</p>
-                  <ColorPicker v-model="form.theme.dropdownBackgroundColorHover" />
-
-                  <p>Border color (hover)</p>
-                  <ColorPicker v-model="form.theme.dropdownBorderColorHover" />
-
-                  <p>Text color (hover)</p>
-                  <ColorPicker v-model="form.theme.dropdownTextColorHover" />
-
-                  <p>Padding (px)</p>
-                  <input type="number" v-model="form.theme.dropdownPadding" />
+                  <p>Border radius (px)</p>
+                  <input type="range" min="0" max="50" v-model="form.theme.borderRadius" />
+                  <p>Input shadow size</p>
+                  <input type="range" min="0" max="10" step="0.5" v-model="form.theme.shadowSize" />
+                  <p>Dropdown shadow size</p>
+                  <input type="range" min="0" max="10" step="0.5" v-model="form.theme.dropdownShadowSize" />
                 </AccordionContent>
               </AccordionPanel>
 
             </Accordion>
+
           </div>
         </TabPanel>
 
@@ -666,6 +617,7 @@ export default {
         });
 
         this.$emit('select', element);
+
       });
 
     },

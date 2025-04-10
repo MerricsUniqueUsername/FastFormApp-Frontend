@@ -47,6 +47,10 @@
                 <option value="not_equals">not equals</option>
                 <option value="greater_than">greater than</option>
                 <option value="less_than">less than</option>
+                <option value="contains">contains</option>
+                <option value="not_contains">not contains</option>
+                <option value="is_empty">is empty</option>
+                <option value="is_not_empty">is not empty</option>
               </select>
 
               <input v-model="condition.value"
