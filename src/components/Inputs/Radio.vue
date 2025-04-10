@@ -5,15 +5,15 @@
       :class="{ 'radio-disabled': disabled }"
     >
       <div 
-        class="radio w-4 h-4 border-2 rounded-full flex items-center justify-center transition-colors"
+        class="p-radiobutton p-component radio w-4 h-4 border-2 rounded-full flex items-center justify-center transition-colors"
         :class="[
-          isChecked ? 'border-blue-500' : 'border-gray-300',
+          isChecked ? 'p-radiobutton-checked' : 'unchecked',
           disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
         ]"
       >
         <div 
           v-if="isChecked" 
-          class="w-2 h-2 rounded-full bg-blue-500"
+          class="w-2 h-2 rounded-full"
         ></div>
       </div>
       
