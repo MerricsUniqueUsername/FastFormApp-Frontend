@@ -3,7 +3,7 @@
   <div class="w-fit absolute">
     
     <!-- Menu -->
-    <div class="bg-gray-50 rounded-sm shadow-lg p-2 border border-gray-300 h-[28rem] overflow-auto">
+    <div class="bg-gray-900 shadow-lg p-2 h-[28rem] overflow-auto !text-gray-200">
 
       <!-- Layout -->
       <p class="section !mt-0">Layout</p>
@@ -266,6 +266,15 @@ export default {
   mt-2
 }
 
+p {
+  @apply
+  !text-gray-200
+}
+div {
+  @apply
+  !text-gray-400
+}
+
 .button {
   @apply
   flex
@@ -281,8 +290,8 @@ export default {
 }
 .button:hover {
   @apply
-  text-emerald-600
-  bg-emerald-50;
+  text-blue-600
+  bg-blue-600/20;
 }
 .button svg {
   @apply
