@@ -40,7 +40,7 @@ import FormPreview from './components/FormPreview.vue';
 import ElementList from './components/ElementList.vue';
 import ConditionBuilder from './components/ConditionBuilder.vue';
 import Form from './components/Form.vue';
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 export default {
   name: 'App',
