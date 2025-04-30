@@ -65,6 +65,7 @@ export default {
   emits: ['select', 'change', 'input'],
   data() {
     return {
+      firstLoad: false,
       selected: false,
       htmlStructure: null,
       value: "",
@@ -182,7 +183,10 @@ export default {
      * Update HTML structure
      */
     updateHTMLStructure() {
-      if(this.view) return
+      if(this.view || !this.firstLoad) {
+        this.firstLoad = true
+        return
+      }
       this.element.classIdPaths = this.getHTMLStructure(this.$refs.element)
     },
 
@@ -246,12 +250,11 @@ export default {
     }
   },
   mounted() {
-    console.log("FART")
     this.setupEditMode()
     this.loadElements()
     this.$nextTick(() => {
       this.updateHTMLStructure();
-      if(this.view) this.distributeAttributes()
+      this.distributeAttributes()
     })
   },
   beforeUnmount() {

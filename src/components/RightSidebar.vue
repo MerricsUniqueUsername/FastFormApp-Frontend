@@ -13,7 +13,7 @@
         <TabPanel value="question">
 
           <!-- Question Edit -->
-          <div class="p-4" v-if="selectedId !== null">
+          <div class="p-4">
 
             <!-- Question type -->
             <p class="text-gray-400" style="margin-top: 0;">Type</p>
@@ -187,10 +187,6 @@
 
             <br><br>
 
-          </div>
-          
-          <div v-else class="p-4">
-            <p class="text-gray-400 text-center">Select an element to edit</p>
           </div>
 
         </TabPanel>
@@ -800,18 +796,26 @@ p {
 /* Tabs */
 .p-tab {
   @apply
-  border-gray-600
-  w-[calc(100%/3-4px)]
-  m-0.5
+  border-none
+  !border-r-gray-700
+  !border-l-gray-700
+  !border-b-gray-700
   p-1
   transition
-  duration-150
-  border
-  rounded-md;
+  duration-150;
+  border-left-style: solid !important;
+  border-bottom-style: solid !important;
+  border-right-style: solid !important;
+  border-left-width: 0.25px;
+  border-bottom-width: 0.25px;
+  border-right-width: 0.25px;
 }
 .p-tab:hover {
   @apply
-  !border-blue-600
+  border-none
+  !border-r-gray-600
+  !border-l-gray-600
+  !border-b-gray-600;
 }
 .p-tab-active {
   @apply

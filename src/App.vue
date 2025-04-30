@@ -1,4 +1,5 @@
 <template>
+
   <div id="app" class="h-screen w-screen flex flex-col relative overflow-hidden">
 
     <!-- View form -->
@@ -41,6 +42,9 @@ import ElementList from './components/ElementList.vue';
 import ConditionBuilder from './components/ConditionBuilder.vue';
 import Form from './components/Form.vue';
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios';
+import { debounce } from 'lodash';
 
 export default {
   name: 'App',
@@ -145,16 +149,84 @@ export default {
     closeMenu() {
       this.elementListOpen = false;
     },
+
+    /**
+     * Load data from URL parameter
+     */
+    loadFromRouteParam() {
+      if (this.routeVariable) {
+        axios.get(`http://127.0.0.1:8000/form/${this.routeVariable}/`)
+        .then(response => {
+          const data = response.data;
+          const formData = data.data;
+          if(Object.keys(formData).length !== 0) {
+            this.form = formData;
+            this.formId = data.id;
+            this.getVariables();
+          }
+        })
+      }
+    },
+
+    /**
+     * Save the form to the backend
+     */
+    save() {
+      if (!this.formId) {
+        console.error("Form ID is not set. Cannot save.");
+        return;
+      }
+
+      axios.put(`http://127.0.0.1:8000/updateform/${this.formId}/`, this.form)
+        .then(response => {
+          console.log("Form saved successfully:", response.data);
+        })
+        .catch(error => {
+          console.error("Error saving form:", error.response?.data || error.message);
+        });
+    },
+
+    /**
+     * Initialize the debounced save function
+     */
+    initAutosave() {
+      // Create a debounced version of the save function that waits 2000ms (2 seconds)
+      this.debouncedSave = debounce(() => {
+        this.save();
+      }, 2000);
+      
+      // Optionally add a visual indicator that changes are pending
+      this.debouncedSave.pending = () => {
+        return this.debouncedSave.isScheduled(); // This is a lodash debounce method
+      };
+    },
+    
+    /**
+     * Trigger the autosave
+     */
+    triggerAutosave() {
+      this.debouncedSave();
+    },
+    
+    /**
+     * Force an immediate save regardless of debounce timer
+     */
+    forceSave() {
+      this.debouncedSave.flush(); // This immediately executes the save
+    },
   },
 
   data() {
     return {
-
+      debouncedSave: null,
+      saveStatus: 'idle', // Can be 'idle', 'saving', 'saved', 'error'
+      routeVariable: null,
       elementListOpen: false,
       selectedId: null,
       conditionBuilderOpen: false,
       formPreviewOpen: false,
       formInteract: true,
+      formId: null,
 
       // Form data
       form: {
@@ -194,7 +266,16 @@ export default {
     }
   },
 
+  setup() {
+    // Get route in the setup function
+    const route = useRoute();
+    return { route };
+  },
+
   mounted() {
+    // Get the route parameter and store it
+    this.routeVariable = this.route.params.variable;
+    this.loadFromRouteParam();
     
     // Add event listener to close menu when clicking outside
     document.addEventListener('click', (e) => {
@@ -208,20 +289,32 @@ export default {
       this.closeMenu();
     });
 
+    // Autosave
+    this.initAutosave();
+
+    // Also save before the user leaves the page
+    window.addEventListener('beforeunload', () => {
+      this.forceSave();
+    });
+    
   },
 
-  // Watch for form changing
+  // Watch for form changing and route changes
   watch: {
     form: {
       handler() {
         this.getVariables();
+        this.triggerAutosave();
       },
       deep: true,
     },
+    '$route.params.variable': {
+      handler(newValue) {
+        this.routeVariable = newValue;
+        this.loadFromRouteParam();
+      }
+    }
   }
 
 }
 </script>
-
-
-

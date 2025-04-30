@@ -56,6 +56,13 @@ export default {
   methods: {
 
     /**
+     * Return all form elements
+     */
+    getElements() {
+      return this.$refs.form_element;
+    },
+
+    /**
      * Handle input change in form elements
      * @param unselectHTML
      */
@@ -180,7 +187,7 @@ export default {
         }
         .form .element input, .form .input {
           background-color: #${theme.inputBaseBackground};
-          border: 1px solid #${theme.borderColor};
+          border: 1px solid #${theme.borderColor} !important;
           color: #${theme.textColor};
           padding: ${theme.inputPadding}px;
           font-size: ${theme.inputFontSize}px !important;
@@ -212,7 +219,7 @@ export default {
         }
         .form .element textarea {
           background-color: #${theme.inputBaseBackground};
-          border: 1px solid #${theme.borderColor};
+          border: 1px solid #${theme.borderColor} !important;
           color: #${theme.textColor};
           padding: ${theme.inputPadding}px;
           font-size: ${theme.inputFontSize}px;

@@ -11,8 +11,11 @@
   "dependencies": {
     "@primevue/themes": "^4.2.5",
     "ace-builds": "^1.37.1",
+    "axios": "^1.9.0",
+    "lodash": "^4.17.21",
     "primevue": "^4.2.5",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

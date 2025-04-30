@@ -9,7 +9,7 @@
     </button>
 
     <!-- Form -->
-    <div ref="form" class="p-4 text-black m-16 relative form">
+    <div ref="form" class="p-4 text-black m-16 relative form w-[90%] max-w-[712px] mx-auto">
 
       <!-- Form elements -->
       <FormElement
