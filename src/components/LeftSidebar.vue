@@ -1,8 +1,8 @@
 <template>
-  <div class="w-1/6 bg-gray-900 border-r border-gray-800 overflow-auto h-screen flex flex-col">
+  <div class="w-1/5 bg-neutral-900 border-r border-neutral-800 overflow-auto h-screen flex flex-col">
     <div class="p-4 flex-1">
       <!-- Header with Add button -->
-      <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-800">
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-neutral-800">
         <h2 class="text-gray-200 font-medium">Form Elements</h2>
         <button 
           @click="$emit('openMenu')" 
@@ -23,7 +23,7 @@
           v-model="searchQuery"
           type="text"
           placeholder="Search elements..."
-          class="w-full bg-gray-800 text-gray-300 text-sm rounded-md px-3 py-2 pl-8 border border-gray-700
+          class="w-full bg-neutral-800 text-gray-300 text-sm rounded-md px-3 py-2 pl-8 border border-neutral-700
                  focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
         />
         <svg class="absolute left-2.5 top-2.5 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -40,7 +40,7 @@
           class="element p-3 flex items-center cursor-pointer rounded-md select-none transition-all duration-150"
           :class="[selectedId === element.id 
               ? 'bg-blue-600/20 border border-blue-500' 
-              : 'bg-gray-800 border border-gray-800 hover:border-gray-700 hover:bg-gray-800/70']"
+              : 'bg-neutral-800 border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-800/70']"
           draggable="true"
           @dragstart="startDrag(index)"
           @dragover.prevent="dragOver(index)"

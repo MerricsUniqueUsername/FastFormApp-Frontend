@@ -111,7 +111,7 @@ export default {
   methods: {
 
     /**
-     * Load conditions from selected element
+     * Load conditions from the selected element
      */
     loadConditions() {
       const element = this.getSelectedElement();
@@ -128,7 +128,7 @@ export default {
     },
 
     /**
-     * Add new group of conditions
+     * Add a new group of conditions
      */
     addGroup() {
       this.conditions.push({
@@ -144,7 +144,7 @@ export default {
     },
 
     /**
-     * Remove group of conditions
+     * Remove the group of conditions
      * @param groupIndex 
      */
     removeGroup(groupIndex) {
@@ -152,7 +152,7 @@ export default {
     },
 
     /**
-     * Add new condition to group
+     * Add new condition to the group
      * @param groupIndex 
      */
     addCondition(groupIndex) {

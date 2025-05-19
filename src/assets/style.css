@@ -5,3 +5,33 @@
 * {
   outline: none;
 }
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #555 #2a2a2a;
+}
+
+/* For Edge and IE */
+body {
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
