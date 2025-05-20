@@ -1,14 +1,14 @@
 <template>
 
   <!-- Selector for element -->
-  <div v-show="formInteract && selectedElement" ref="outline" class="fixed border border-dashed z-20 border-gray-500 pointer-events-none"></div>
+  <div v-show="formInteract && selectedElement" ref="outline" class="fixed border border-dashed z-20 border-neutral-500 pointer-events-none"></div>
 
   <!-- Selector for HTML element -->
   <div ref="html_outline" v-show="selectedHTMLElement && formInteract" class="fixed border z-30 border-blue-400 pointer-events-none"></div>
 
   <!-- Content -->
-  <div class="w-2/3 h-full bg-gray-100 overflow-y-auto" id="content">
-    <div class="p-4 m-5 bg-white rounded-md shadow-sm border border-gray-300 formContainer">
+  <div class="w-2/3 h-[calc(100%-30px)] bg-neutral-950" id="content">
+    <div class="p-4 bg-white rounded-2xl m-3 shadow-sm h-full border border-neutral-300 formContainer overflow-y-auto">
 
       <!-- Form -->
       <div ref="form" class="text-black m-16 relative form">
@@ -18,7 +18,7 @@
           @select="selectElement"
           @change="handleChange"
           :editing="formInteract" 
-          v-for="(element) in form.elements" 
+          v-for="(element) in form.elements"
           :key="element.id" 
           :element="element" 
           ref="form_element"
@@ -501,22 +501,22 @@ export default {
   @apply 
   rounded-sm 
   border border-solid
-  border-gray-400
+  border-neutral-400
 }
 .input-color {
   @apply
-  text-gray-300
-  bg-gray-800
-  !border-gray-700;
+  text-neutral-300
+  bg-neutral-800
+  !border-neutral-700;
 }
 .placeholder {
   @apply
-  !text-gray-500
+  !text-neutral-500
   text-sm
 }
 .input-border:hover {
   @apply
-  border-gray-700;
+  border-neutral-700;
 }
 .shadow {
   @apply
@@ -535,16 +535,16 @@ export default {
   @apply
   shadow
   padding
-  bg-gray-900
-  !border-gray-700
+  bg-neutral-900
+  !border-neutral-700
   rounded-md
   input-border;
 }
 .dropdown-option {
   @apply
-  text-gray-400
-  hover:text-gray-200
-  hover:!bg-gray-800
+  text-neutral-400
+  hover:text-neutral-200
+  hover:!bg-neutral-800
   transition
   duration-150
   rounded-sm
@@ -566,14 +566,14 @@ export default {
 h1 {
   @apply
   text-3xl
-  text-gray-800
+  text-neutral-800
   font-bold;
 }
 
 /* Paragraph */
 p {
   @apply
-  text-gray-700
+  text-neutral-700
   leading-relaxed;
 }
 
@@ -581,7 +581,7 @@ p {
 .divider {
   @apply
   border-t
-  border-gray-200
+  border-neutral-200
   my-4;
 }
 
@@ -618,7 +618,7 @@ textarea {
   @apply 
   rounded-sm 
   m-1.5
-  text-gray-700;
+  text-neutral-700;
 }
 .p-inputnumber-button {
   @apply
@@ -634,7 +634,7 @@ textarea {
   shadow
   rounded-full
   border
-  border-gray-400
+  border-neutral-400
 }
 .p-radiobutton.p-component.p-radiobutton-checked {
   @apply 
@@ -673,13 +673,13 @@ textarea {
 }
 .p-select-option.p-focus {
   @apply 
-  !bg-gray-800
-  !text-gray-200;
+  !bg-neutral-800
+  !text-neutral-200;
 }
 .p-select-option-selected {
   @apply 
-  bg-gray-800
-  !text-gray-200;
+  bg-neutral-800
+  !text-neutral-200;
 }
 
 /* Multiselect */
@@ -689,7 +689,7 @@ textarea {
   shadow
   transition
   padding
-  bg-gray-50;
+  bg-neutral-50;
 }
 .p-multiselect-overlay.p-component {
   @apply
@@ -701,8 +701,8 @@ textarea {
 }
 .p-multiselect-overlay .p-multiselect-header {
   @apply
-  text-gray-600
-  hover:text-gray-900
+  text-neutral-600
+  hover:text-neutral-900
   transition
   duration-150
   rounded-sm
@@ -781,7 +781,7 @@ textarea {
 }
 .p-datepicker-day-cell.p-datepicker-other-month {
   @apply
-  text-gray-500;
+  text-neutral-500;
 }
 
 /* Star rating */

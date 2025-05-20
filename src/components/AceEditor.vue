@@ -49,7 +49,7 @@ export default {
       })
 
       this.editor.setValue(this.modelValue, 1)
-      
+
       this.editor.on('change', () => {
         this.$emit('update:modelValue', this.editor.getValue())
         this.$nextTick(() => { // Ensure the DOM is updated before emitting
@@ -81,129 +81,134 @@ export default {
 </script>
 
 <style scoped>
-  .editor-container {
-    width: 100%;
-    height: 400px;
-    position: relative;
-  }
+.editor-container {
+  width: 100%;
+  height: 400px;
+  position: relative;
+}
 
-  #editor {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
+#editor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
 
 :deep(.ace_editor) {
   font-family: 'Fira Code', monospace;
   line-height: 1.5;
-  background-color: #111827; /* Matches bg-gray-900 from Vue component */
-  color: #e5e7eb; /* Matches text-gray-200 from Vue component */
+  background-color: #1e1e1e; /* VS Code Dark theme background */
+  color: #d4d4d4; /* VS Code Dark theme default text color */
 }
 
 :deep(.ace_gutter) {
-  background-color: #0f172a; /* Slightly darker than editor for contrast */
-  color: #6b7280; /* Matches text-gray-500 from Vue component */
-  border-right: 1px solid #1f2937; /* Matches border-gray-800 */
+  background-color: #1e1e1e; /* VS Code Dark theme gutter background */
+  color: #606060; /* VS Code Dark theme gutter number color */
+  border-right: 1px solid #2d2d2d; /* Slightly darker border */
 }
 
 :deep(.ace_print-margin) {
   width: 1px;
-  background: #1f2937; /* Matches border-gray-800 */
+  background: #3b3b3b; /* VS Code Dark theme print margin */
 }
 
 :deep(.ace_cursor) {
-  color: #60a5fa; /* Matches text-blue-400 from Vue component */
+  color: #aeafad; /* VS Code Dark theme cursor color */
   border-left: 2px solid; /* Thicker cursor */
 }
 
+/* VS Code Dark theme selection background */
 :deep(.ace_marker-layer .ace_selection) {
-  background: rgba(37, 99, 235, 0.2); /* Matches bg-blue-600/20 */
+  background: rgba(38, 79, 120, 0.5);
 }
 
+/* Generic markers - keeping these simple */
 :deep(.ace_marker-layer .ace_step) {
-  background: rgb(198, 219, 174);
+  background: rgba(100, 100, 100, 0.3);
 }
 
 :deep(.ace_marker-layer .ace_stack) {
-  background: rgb(164, 229, 184);
+  background: rgba(120, 120, 120, 0.3);
 }
 
+/* VS Code Dark theme bracket match border */
 :deep(.ace_marker-layer .ace_bracket) {
   margin: -1px 0 0 -1px;
-  border: 1px solid #3b82f6; /* Matches border-blue-500 */
+  border: 1px solid #515151;
 }
 
+/* VS Code Dark theme active line background */
 :deep(.ace_marker-layer .ace_active-line) {
-  background: #1e293b; /* Slightly lighter than base background */
+  background: #2d2d2d;
 }
 
+/* VS Code Dark theme selected word background and border */
 :deep(.ace_marker-layer .ace_selected-word) {
-  background-color: rgba(37, 99, 235, 0.15); /* Lighter blue highlight */
-  border: 1px solid #60a5fa; /* Matches text-blue-400 */
+  background-color: rgba(38, 79, 120, 0.3);
+  border: 1px solid #515151;
 }
 
 :deep(.ace_invisible) {
-  color: #4b5563; /* Matches text-gray-600 */
+  color: #404040; /* VS Code Dark theme invisible characters */
 }
 
-/* Syntax highlighting - Vue-style palette */
+/* Syntax highlighting - VS Code Dark Theme Palette (same as before) */
 :deep(.ace_entity.ace_name.ace_tag) {
-  color: #93c5fd; /* Matches text-blue-300 */
+  color: #569cd6; /* Blue for tags */
 }
 
 :deep(.ace_entity.ace_other.ace_attribute-name) {
-  color: #a5b4fc; /* Light indigo */
+  color: #9cdcb0; /* Light green for attribute names */
 }
 
 :deep(.ace_entity.ace_name.ace_function) {
-  color: #fcd34d; /* Amber/gold for functions */
+  color: #dcdcaa; /* Yellow for functions */
 }
 
 :deep(.ace_keyword) {
-  color: #c4b5fd; /* Purple - matches Vue's style */
+  color: #c586c0; /* Purple for keywords */
 }
 
 :deep(.ace_constant) {
-  color: #5eead4; /* Teal for constants */
+  color: #4fc1ff; /* Light blue for constants */
 }
 
 :deep(.ace_constant.ace_numeric) {
-  color: #86efac; /* Light green for numbers */
+  color: #b5cea8; /* Green for numbers */
 }
 
 :deep(.ace_variable) {
-  color: #bfdbfe; /* Light blue for variables */
+  color: #9cdcb0; /* Light green for variables */
 }
 
 :deep(.ace_variable.ace_parameter) {
-  color: #fca5a5; /* Light red for parameters */
+  color: #fcd34d; /* Yellow for parameters (slight variation from VS Code) */
 }
 
 :deep(.ace_string) {
-  color: #fca5a5; /* Light red for strings */
+  color: #ce9178; /* Orange for strings */
 }
 
 :deep(.ace_comment) {
-  color: #6b7280; /* Matches text-gray-500 */
+  color: #6a9955; /* Green for comments */
   font-style: italic;
 }
 
 :deep(.ace_support.ace_function) {
-  color: #fcd34d; /* Amber/gold for support functions */
+  color: #dcdcaa; /* Yellow for support functions */
 }
 
 :deep(.ace_support.ace_class) {
-  color: #5eead4; /* Teal for classes */
+  color: #4fc1ff; /* Light blue for support classes */
 }
 
 :deep(.ace_storage) {
-  color: #93c5fd; /* Light blue for storage keywords */
+  color: #c586c0; /* Purple for storage keywords */
 }
 
 :deep(.ace_operator) {
-  color: #e5e7eb; /* Matches text-gray-200 */
+  color: #d4d4d4; /* VS Code Dark theme default text color */
 }
 
 :deep(.ace_indent-guide) {
@@ -211,23 +216,28 @@ export default {
   opacity: 0.15;
 }
 
+/* VS Code Dark theme active line gutter background and text */
 :deep(.ace_gutter-cell.ace_gutter-active-line) {
-  background-color: #1f2937; /* Matches bg-gray-800 */
-  color: #9ca3af; /* Brighter text for active line */
+  background-color: #2d2d2d;
+  color: #c6c6c6;
 }
 
 :deep(.ace_content) {
-  background: #111827; /* Matches bg-gray-900 */
-  color: #e5e7eb; /* Matches text-gray-200 */
+  background: #1e1e1e; /* VS Code Dark theme background */
+  color: #d4d4d4; /* VS Code Dark theme default text color */
 }
 
-/* Improved scrollbar to match Vue component style */
+/* Scrollbar to match VS Code Dark theme (same as before) */
 :deep(.ace_scrollbar) {
-  background-color: #111827; /* Matches bg-gray-900 */
+  background-color: #1e1e1e;
   width: 10px;
 }
 
 :deep(.ace_scrollbar-inner) {
-  background-color: #374151; /* Matches bg-gray-700 */
+  background-color: #5a5a5a;
+}
+
+:deep(.ace_scrollbar-inner:hover) {
+  background-color: #7a7a7a;
 }
 </style>

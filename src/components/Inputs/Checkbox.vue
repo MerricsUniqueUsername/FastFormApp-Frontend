@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="checkbox-container inline-flex items-center cursor-pointer"
+    class="checkbox-container inline-flex items-center cursor-pointer w-full"
     @click="toggleCheckbox"
     :checked="{ 'checkbox-disabled': disabled }"
   >

@@ -3,7 +3,7 @@
   <div class="w-fit absolute">
     
     <!-- Menu -->
-    <div class="bg-gray-900 shadow-lg p-2 h-[28rem] overflow-auto !text-gray-200">
+    <div class="bg-neutral-900 shadow-lg p-2 h-[28rem] overflow-auto !text-neutral-200">
 
       <!-- Layout -->
       <p class="section !mt-0">Layout</p>
@@ -268,11 +268,11 @@ export default {
 
 p {
   @apply
-  !text-gray-200
+  !text-neutral-200
 }
 div {
   @apply
-  !text-gray-400
+  !text-neutral-400
 }
 
 .button {
@@ -285,7 +285,7 @@ div {
   rounded-sm
   transition
   duration-300
-  text-gray-600;
+  text-neutral-600;
   user-select: none;
 }
 .button:hover {

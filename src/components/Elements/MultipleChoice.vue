@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- Custom menu -->
-    <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none">
-      <AddButton @click="addAnswer" class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto" />
-    </div>
+<!--    <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none">-->
+<!--      <AddButton @click="addAnswer" class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto" />-->
+<!--    </div>-->
 
-    <div ref="element" class="my-6">
-      <p @input="handleQuestionChange" ref="question" class="edit-text parent question" v-text="element.question" v-once/>
+    <div ref="element" class="my-6 w-full">
+      <p @input="handleQuestionChange" ref="question" class="edit-text parent question w-full" v-text="element.question" v-once/>
 
-      <div ref="answer" v-for="(answer, index) in element.answers" :key="index" class="flex items-center gap-2 select parent">
+      <div ref="answer" v-for="(answer, index) in element.answers" :key="index" class="flex items-center gap-2 select parent w-full">
         <RadioButton 
           v-if="!multiselect" 
           :id="'radio-' + index" 
@@ -23,9 +23,9 @@
           :value="answer" 
           :modelValue="isValueSelected(answer)"
           @update:modelValue="toggleValue(answer)"
-          class="mt-1" 
+          class="mt-1"
         />
-        <RemoveButton v-if="selected" @click="removeAnswer(index)" class="pointer-events-auto absolute" />
+<!--        <RemoveButton v-if="selected" @click="removeAnswer(index)" class="pointer-events-auto absolute" />-->
       </div>
     </div>
   </div>
@@ -69,7 +69,10 @@ export default {
     handleQuestionChange() {
       const value = this.$refs.question.innerText;
       this.element.question = value;
-      this.$emit('change');
+      this.$emit('change', {
+        elementId: this.element.id,
+        type: 'questionChange'
+      });
     },
     handleAnswerChange(index, label) {
       this.element.answers[index] = label.innerText;
@@ -91,19 +94,39 @@ export default {
       if(!this.element.answers) {
         this.element.answers = [];
       }
-      this.element.answers.push('New answer');
-
-      // Wait for the DOM to update
+      
+      // Create a new array instead of mutating the existing one
+      const newAnswers = [...this.element.answers, 'New answer'];
+      
+      // Create a clone of the element to avoid modifying the original reference
+      const updatedElement = {...this.element, answers: newAnswers};
+      
+      // Update the element with the new answers
+      this.element.answers = newAnswers;
+      
+      // Wait for the DOM to update and pass the element's ID to identify which element changed
       this.$nextTick(() => {
-        this.$emit('change');
+        this.$emit('change', {
+          elementId: this.element.id,
+          type: 'addAnswer'
+        });
       });
     },
     removeAnswer(index) {
       if (this.element.answers.length > 1) {
-        this.element.answers.splice(index, 1);
+        // Create a new array without the removed answer
+        const newAnswers = [...this.element.answers];
+        newAnswers.splice(index, 1);
+        
+        // Update the element with the new answers
+        this.element.answers = newAnswers;
       }
+      
       this.$nextTick(() => {
-        this.$emit('change', 'true');
+        this.$emit('change', {
+          elementId: this.element.id,
+          type: 'removeAnswer'
+        });
       });
     },
     // Helper methods for multiselect

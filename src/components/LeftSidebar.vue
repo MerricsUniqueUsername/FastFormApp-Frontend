@@ -1,5 +1,5 @@
 <template>
-  <div class="w-1/5 bg-neutral-900 border-r border-neutral-800 overflow-auto h-screen flex flex-col">
+  <div class="w-1/4 bg-neutral-950 overflow-auto h-screen flex flex-col">
     <div class="p-4 flex-1">
       <!-- Header with Add button -->
       <div class="flex items-center justify-between mb-6 pb-4 border-b border-neutral-800">

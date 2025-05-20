@@ -1,233 +1,376 @@
 <template>
-  <div class="w-1/4 h-full min-w-60 relative bg-gray-900 text-gray-200 border-l border-l-gray-800 overflow-auto">
-
+  <div
+      class="w-1/4 h-full min-w-60 relative bg-neutral-950 text-neutral-200  overflow-auto"
+  >
     <!-- Topbar tabs -->
     <Tabs value="question" style="height: 100%;">
-      <TabList class="text-[14px]">
-        <Tab @click="leaveCSSMenu()" value="question" class="w-1/3">Question</Tab>
-        <Tab @click="enterCSSMenu()" value="css" class="w-1/3">CSS</Tab>
-        <Tab @click="leaveCSSMenu()" value="design" class="w-1/3">Design</Tab>
+      <TabList class="text-[14px] tab-list">
+        <Tab @click="leaveCSSMenu()" value="question" class="w-1/3 tab-item">
+          Question
+        </Tab>
+        <Tab @click="enterCSSMenu()" value="css" class="w-1/3 tab-item">CSS</Tab>
+        <Tab @click="leaveCSSMenu()" value="design" class="w-1/3 tab-item">
+          Design
+        </Tab>
       </TabList>
 
       <TabPanels>
         <TabPanel value="question">
-
           <!-- Question Edit -->
           <div class="p-4">
-
             <!-- Question type -->
-            <p class="text-gray-400" style="margin-top: 0;">Type</p>
-            <Select 
-              value-type="model-value"
-              input="type"
-              v-model="selectedElement.type"
-              :options="questionTypes" 
-              optionLabel="label" 
-              optionValue="value" 
-              class="w-full" 
-              placeholder="Select a type"
-              @change="updateSelectedElement($event.value)"
+            <p class="text-neutral-400" style="margin-top: 0;">Type</p>
+            <Select
+                value-type="model-value"
+                input="type"
+                v-model="selectedElement.type"
+                :options="questionTypes"
+                optionLabel="label"
+                optionValue="value"
+                class="w-full"
+                placeholder="Select a type"
+                @change="updateSelectedElement($event.value)"
             />
 
             <!-- Variable name -->
-            <p class="text-gray-400">Variable name</p>
-            <input type="text" pattern="^[a-zA-Z_][a-zA-Z0-9_]*$" @input="updateSelectedElement" v-model="selectedElement.name" spellcheck="false"
-            class="w-full bg-gray-800 text-gray-300 text-sm rounded-md px-3 py-2 pl-8 border border-gray-700
-                 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+            <p class="text-neutral-400">Variable name</p>
+            <input
+                type="text"
+                pattern="^[a-zA-Z_][a-zA-Z0-9_]*$"
+                @input="updateSelectedElement"
+                v-model="selectedElement.name"
+                spellcheck="false"
+                class="w-full bg-neutral-800 text-neutral-300 text-sm rounded-md px-3 py-2 pl-8 border !border-neutral-700 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            />
 
             <!-- Required -->
-            <p class="text-gray-400">Required</p>
-            <input type="checkbox" @change="updateSelectedElement" v-model="selectedElement.required" class="!h-4 !w-4 relative" />
+            <p class="text-neutral-400">Required</p>
+            <input
+                type="checkbox"
+                @change="updateSelectedElement"
+                v-model="selectedElement.required"
+                class="!h-4 !w-4 relative"
+            />
 
             <!-- Conditions -->
-            <button class="w-full flex justify-end text-gray-400 hover:text-gray-300 cursor-pointer"
-                    @click="$emit('openConditionEditor')">
+            <button
+                class="w-full flex justify-end text-neutral-400 hover:text-neutral-300 cursor-pointer"
+                @click="$emit('openConditionEditor')"
+            >
               Open condition editor
             </button>
 
             <!-- Divider -->
-            <div class="border-b border-gray-800 my-4"></div>
+            <div class="border-b border-neutral-800 my-4"></div>
 
-            <div class="placeholder-input" v-if="[ 'short-response', 'dropdown', 'number', 'date' ].includes(selectedElement.type)">
+            <div
+                class="placeholder-input"
+                v-if="[ 'short-response', 'dropdown', 'number', 'date' ].includes(selectedElement.type)"
+            >
               <p>Placeholder</p>
-              <input type="text" @input="updateSelectedElement" v-model="selectedElement.placeholder" spellcheck="false">
+              <input
+                  type="text"
+                  @input="updateSelectedElement"
+                  v-model="selectedElement.placeholder"
+                  spellcheck="false"
+              />
             </div>
 
-            
             <!-- Multiselect -->
             <div class="multiselect" v-if="selectedElement.type === 'dropdown'">
               <p>Multiselect</p>
-              <input type="checkbox" @change="updateSelectedElement" v-model="selectedElement.multiselect" class="!h-4 !w-4 relative" />
+              <input
+                  type="checkbox"
+                  @change="updateSelectedElement"
+                  v-model="selectedElement.multiselect"
+                  class="!h-4 !w-4 relative"
+              />
             </div>
 
             <!-- Options -->
-            <div class="options" v-if="selectedElement.type === 'radio' || selectedElement.type === 'checkbox' || selectedElement.type === 'dropdown'">
-              <p class="text-gray-400">Options</p>
-              <div class="border border-gray-600 rounded-sm shadow-sm bg-gray-800">
-                <div v-for="(answer, index) in selectedElement.answers" :key="index" class="option-list-element flex items-center border-b border-b-gray-700">
-                  <div @click="removeOption(index)" class="w-4 h-4 rounded-sm cursor-pointer text-gray-200 hover:bg-gray-100 aspect-square flex justify-center items-center mx-2 border border-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
+            <div
+                class="options"
+                v-if="selectedElement.type === 'radio' || selectedElement.type === 'checkbox' || selectedElement.type === 'dropdown'"
+            >
+              <p class="text-neutral-400">Options</p>
+              <div
+                  class="border border-neutral-600 rounded-sm shadow-sm bg-neutral-800"
+              >
+                <div
+                    v-for="(answer, index) in selectedElement.answers"
+                    :key="index"
+                    class="option-list-element flex items-center border-b border-b-neutral-700"
+                >
+                  <div
+                      @click="removeOption(index)"
+                      class="w-4 h-4 rounded-sm cursor-pointer text-neutral-200 hover:bg-neutral-100 aspect-square flex justify-center items-center mx-2 border border-neutral-500"
+                  >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        class="bi bi-dash-lg"
+                        viewBox="0 0 16 16"
+                    >
+                      <path
+                          fill-rule="evenodd"
+                          d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"
+                      />
                     </svg>
                   </div>
-                  <input class="!shadow-none !border-none !text-gray-200" type="text" @input="updateSelectedElement" v-model="selectedElement.answers[index]" spellcheck="false">
+                  <input
+                      class="!shadow-none !border-none !text-neutral-200"
+                      type="text"
+                      @input="updateSelectedElement"
+                      v-model="selectedElement.answers[index]"
+                      spellcheck="false"
+                  />
                 </div>
               </div>
-              <div @click="addOption" class="w-full flex shadow-sm items-center justify-center cursor-pointer border border-gray-600 text-gray-500 hover:bg-gray-800 rounded-sm p-1 mt-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+              <div
+                  @click="addOption"
+                  class="w-full flex shadow-sm items-center justify-center cursor-pointer border border-neutral-600 text-neutral-500 hover:bg-neutral-800 rounded-sm p-1 mt-1"
+              >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-plus-lg"
+                    viewBox="0 0 16 16"
+                >
+                  <path
+                      fill-rule="evenodd"
+                      d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+                  />
                 </svg>
               </div>
             </div>
 
             <!-- Min -->
-            <div class="min" v-if="selectedElement.type === 'number' || selectedElement.type === 'slider'">
+            <div
+                class="min"
+                v-if="selectedElement.type === 'number' || selectedElement.type === 'slider'"
+            >
               <p>Min</p>
-              <input type="number" @input="updateSelectedElement" v-model="selectedElement.min" spellcheck="false">
+              <input
+                  type="number"
+                  @input="updateSelectedElement"
+                  v-model="selectedElement.min"
+                  spellcheck="false"
+              />
             </div>
 
             <!-- Max -->
-            <div class="max" v-if="selectedElement.type === 'number' || selectedElement.type === 'slider'">
+            <div
+                class="max"
+                v-if="selectedElement.type === 'number' || selectedElement.type === 'slider'"
+            >
               <p>Max</p>
-              <input type="number" @input="updateSelectedElement" v-model="selectedElement.max" spellcheck="false">
+              <input
+                  type="number"
+                  @input="updateSelectedElement"
+                  v-model="selectedElement.max"
+                  spellcheck="false"
+              />
             </div>
 
             <!-- Step -->
-            <div class="step" v-if="selectedElement.type === 'number' || selectedElement.type === 'slider'">
+            <div
+                class="step"
+                v-if="selectedElement.type === 'number' || selectedElement.type === 'slider'"
+            >
               <p>Step</p>
-              <input type="number" @input="updateSelectedElement" v-model="selectedElement.step" spellcheck="false">
+              <input
+                  type="number"
+                  @input="updateSelectedElement"
+                  v-model="selectedElement.step"
+                  spellcheck="false"
+              />
             </div>
 
             <!-- Min fraction digits -->
-            <div class="min-fraction-digits" v-if="selectedElement.type === 'number'">
+            <div
+                class="min-fraction-digits"
+                v-if="selectedElement.type === 'number'"
+            >
               <p>Min fraction digits</p>
-              <input type="number" @input="updateSelectedElement" v-model="selectedElement.minFractionDigits" spellcheck="false">
+              <input
+                  type="number"
+                  @input="updateSelectedElement"
+                  v-model="selectedElement.minFractionDigits"
+                  spellcheck="false"
+              />
             </div>
-          
+
             <!-- Max fraction digits -->
-            <div class="max-fraction-digits" v-if="selectedElement.type === 'number'">
+            <div
+                class="max-fraction-digits"
+                v-if="selectedElement.type === 'number'"
+            >
               <p>Max fraction digits</p>
-              <input type="number" @input="updateSelectedElement" v-model="selectedElement.maxFractionDigits" spellcheck="false">
+              <input
+                  type="number"
+                  @input="updateSelectedElement"
+                  v-model="selectedElement.maxFractionDigits"
+                  spellcheck="false"
+              />
             </div>
 
             <!-- Grouping -->
             <div class="grouping" v-if="selectedElement.type === 'number'">
               <p>Grouping</p>
-              <input type="checkbox" @change="updateSelectedElement" v-model="selectedElement.grouping" class="!h-4 !w-4 relative" />
+              <input
+                  type="checkbox"
+                  @change="updateSelectedElement"
+                  v-model="selectedElement.grouping"
+                  class="!h-4 !w-4 relative"
+              />
             </div>
 
             <!-- Prefix -->
             <div class="prefix" v-if="selectedElement.type === 'number'">
               <p>Prefix</p>
-              <input type="text" @input="updateSelectedElement" v-model="selectedElement.prefix" spellcheck="false">
+              <input
+                  type="text"
+                  @input="updateSelectedElement"
+                  v-model="selectedElement.prefix"
+                  spellcheck="false"
+              />
             </div>
 
             <!-- Suffix -->
             <div class="suffix" v-if="selectedElement.type === 'number'">
               <p>Suffix</p>
-              <input type="text" @input="updateSelectedElement" v-model="selectedElement.suffix" spellcheck="false">
+              <input
+                  type="text"
+                  @input="updateSelectedElement"
+                  v-model="selectedElement.suffix"
+                  spellcheck="false"
+              />
             </div>
 
             <!-- Show buttons -->
             <div class="show-buttons" v-if="selectedElement.type === 'number'">
               <p>Show buttons</p>
-              <input type="checkbox" @change="updateSelectedElement" v-model="selectedElement.showButtons" class="!h-4 !w-4 relative" />
+              <input
+                  type="checkbox"
+                  @change="updateSelectedElement"
+                  v-model="selectedElement.showButtons"
+                  class="!h-4 !w-4 relative"
+              />
             </div>
 
             <!-- Button layout -->
-            <div class="button-layout" v-if="selectedElement.type === 'number' && selectedElement.showButtons">
+            <div
+                class="button-layout"
+                v-if="selectedElement.type === 'number' && selectedElement.showButtons"
+            >
               <p>Button layout</p>
-              <Select 
-                value-type="model-value"
-                input="buttonLayout"
-                v-model="selectedElement.buttonLayout"
-                :options="[
-                  {'label': 'Stacked', 'value': 'stacked'},
-                  {'label': 'Horizontal', 'value': 'horizontal'},
-                  {'label': 'Vertical', 'value': 'vertical'},
-                ]" 
-                optionLabel="label" 
-                optionValue="value" 
-                class="w-full" 
-                placeholder="Select a layout"
-                @change="updateSelectedElement"
+              <Select
+                  value-type="model-value"
+                  input="buttonLayout"
+                  v-model="selectedElement.buttonLayout"
+                  :options="[
+                  { 'label': 'Stacked', 'value': 'stacked' },
+                  { 'label': 'Horizontal', 'value': 'horizontal' },
+                  { 'label': 'Vertical', 'value': 'vertical' },
+                ]"
+                  optionLabel="label"
+                  optionValue="value"
+                  class="w-full"
+                  placeholder="Select a layout"
+                  @change="updateSelectedElement"
               />
             </div>
 
             <!-- Show time -->
             <div class="show-time" v-if="selectedElement.type === 'date'">
               <p>Show time</p>
-              <input type="checkbox" @change="updateSelectedElement" v-model="selectedElement.showTime" class="!h-4 !w-4 relative" />
-            </div>
-
-            <!-- Time only -->
-            <div class="time-only" v-if="selectedElement.type === 'date' && selectedElement.showTime">
-              <p>Time only</p>
-              <input type="checkbox" @change="updateSelectedElement" v-model="selectedElement.timeOnly" class="!h-4 !w-4 relative" />
-            </div>
-
-            <!-- Hour format -->
-            <div class="hour-format" v-if="selectedElement.type === 'date' && selectedElement.showTime">
-              <p>Hour format</p>
-              <Select 
-                value-type="model-value"
-                input="hourFormat"
-                v-model="selectedElement.hourFormat"
-                :options="[
-                  {'label': '12', 'value': '12'},
-                  {'label': '24', 'value': '24'},
-                ]" 
-                optionLabel="label" 
-                optionValue="value" 
-                class="w-full" 
-                placeholder="Select a format"
-                @change="updateSelectedElement"
+              <input
+                  type="checkbox"
+                  @change="updateSelectedElement"
+                  v-model="selectedElement.showTime"
+                  class="!h-4 !w-4 relative"
               />
             </div>
 
-            <br><br>
+            <!-- Time only -->
+            <div
+                class="time-only"
+                v-if="selectedElement.type === 'date' && selectedElement.showTime"
+            >
+              <p>Time only</p>
+              <input
+                  type="checkbox"
+                  @change="updateSelectedElement"
+                  v-model="selectedElement.timeOnly"
+                  class="!h-4 !w-4 relative"
+              />
+            </div>
 
+            <!-- Hour format -->
+            <div
+                class="hour-format"
+                v-if="selectedElement.type === 'date' && selectedElement.showTime"
+            >
+              <p>Hour format</p>
+              <Select
+                  value-type="model-value"
+                  input="hourFormat"
+                  v-model="selectedElement.hourFormat"
+                  :options="[
+                  { 'label': '12', 'value': '12' },
+                  { 'label': '24', 'value': '24' },
+                ]"
+                  optionLabel="label"
+                  optionValue="value"
+                  class="w-full"
+                  placeholder="Select a format"
+                  @change="updateSelectedElement"
+              />
+            </div>
+
+            <br /><br />
           </div>
-
         </TabPanel>
 
-        <!-- Conditions -->
+        <!-- Design -->
         <TabPanel value="design">
           <div class="p-4">
-
             <Accordion :value="[]" multiple>
+              <!-- Color Scheme -->
+              <AccordionPanel value="colors">
+                <AccordionHeader>Colors</AccordionHeader>
+                <AccordionContent>
+                  <p><strong>Text & Background Colors</strong></p>
+                  <p>Header color</p>
+                  <ColorPicker v-model="form.theme.headerColor" />
+                  <p>Text color</p>
+                  <ColorPicker v-model="form.theme.textColor" />
+                  <p>Accent color</p>
+                  <ColorPicker v-model="form.theme.accentColor" />
+                  <p>Background color</p>
+                  <ColorPicker v-model="form.theme.backgroundColor" />
 
-             <!-- Color Scheme -->
-            <AccordionPanel value="colors">
-              <AccordionHeader>Colors</AccordionHeader>
-              <AccordionContent>
-                <p><strong>Text & Background Colors</strong></p>
-                <p>Header color</p>
-                <ColorPicker v-model="form.theme.headerColor" />
-                <p>Text color</p>
-                <ColorPicker v-model="form.theme.textColor" />
-                <p>Accent color</p>
-                <ColorPicker v-model="form.theme.accentColor" />
-                <p>Background color</p>
-                <ColorPicker v-model="form.theme.backgroundColor" />
-
-                <p><strong>Input Elements</strong></p>
-                <p>Input background</p>
-                <ColorPicker v-model="form.theme.inputBaseBackground" />
-                <p>Border color</p>
-                <ColorPicker v-model="form.theme.borderColor" />
-                <p>Placeholder text</p>
-                <ColorPicker v-model="form.theme.placeholderColor" />
-                <p>Hover background</p>
-                <ColorPicker v-model="form.theme.hoverBackground" />
-                <p>Hover border</p>
-                <ColorPicker v-model="form.theme.hoverBorderColor" />
-                <p>Hover placeholder</p>
-                <ColorPicker v-model="form.theme.hoverPlaceholderColor" />
-                <p>Focus border</p>
-                <ColorPicker v-model="form.theme.focusBorderColor" />
-              </AccordionContent>
-            </AccordionPanel>
+                  <p><strong>Input Elements</strong></p>
+                  <p>Input background</p>
+                  <ColorPicker v-model="form.theme.inputBaseBackground" />
+                  <p>Border color</p>
+                  <ColorPicker v-model="form.theme.borderColor" />
+                  <p>Placeholder text</p>
+                  <ColorPicker v-model="form.theme.placeholderColor" />
+                  <p>Hover background</p>
+                  <ColorPicker v-model="form.theme.hoverBackground" />
+                  <p>Hover border</p>
+                  <ColorPicker v-model="form.theme.hoverBorderColor" />
+                  <p>Hover placeholder</p>
+                  <ColorPicker v-model="form.theme.hoverPlaceholderColor" />
+                  <p>Focus border</p>
+                  <ColorPicker v-model="form.theme.focusBorderColor" />
+                </AccordionContent>
+              </AccordionPanel>
               <!-- Typography -->
               <AccordionPanel value="typography">
                 <AccordionHeader>Typography</AccordionHeader>
@@ -237,7 +380,10 @@
                   <p>Input font size</p>
                   <input type="number" v-model="form.theme.inputFontSize" />
                   <p>Dropdown font size</p>
-                  <input type="number" v-model="form.theme.dropdownFontSize" />
+                  <input
+                      type="number"
+                      v-model="form.theme.dropdownFontSize"
+                  />
                 </AccordionContent>
               </AccordionPanel>
 
@@ -259,56 +405,93 @@
                 <AccordionHeader>Borders & Shape</AccordionHeader>
                 <AccordionContent>
                   <p>Border radius (px)</p>
-                  <input type="range" min="0" max="50" v-model="form.theme.borderRadius" />
+                  <input
+                      type="range"
+                      min="0"
+                      max="50"
+                      v-model="form.theme.borderRadius"
+                  />
                   <p>Input shadow size</p>
-                  <input type="range" min="0" max="10" step="0.5" v-model="form.theme.shadowSize" />
+                  <input
+                      type="range"
+                      min="0"
+                      max="10"
+                      step="0.5"
+                      v-model="form.theme.shadowSize"
+                  />
                   <p>Dropdown shadow size</p>
-                  <input type="range" min="0" max="10" step="0.5" v-model="form.theme.dropdownShadowSize" />
+                  <input
+                      type="range"
+                      min="0"
+                      max="10"
+                      step="0.5"
+                      v-model="form.theme.dropdownShadowSize"
+                  />
                 </AccordionContent>
               </AccordionPanel>
-
             </Accordion>
-
           </div>
         </TabPanel>
 
         <!-- CSS Edit -->
         <TabPanel value="css">
           <div class="p-4">
-
-            <div class="p-3 border border-gray-700 rounded-sm">
-              <p class="!mt-0">Select element</p>
-              <div class="border border-blue-600 bg-blue-600/20 bg-blue-100 p-1 text-blue-500 flex items-center justify-center rounded-sm cursor-pointer hover:bg-blue-500/30 transition-all duration-300"
-                  :class="{'!bg-green-900 !border-green-600 text-green-400' : picking}"
-                  @click="setPickMode()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-index" viewBox="0 0 16 16">
-                  <path d="M6.75 1a.75.75 0 0 1 .75.75V8a.5.5 0 0 0 1 0V5.467l.086-.004c.317-.012.637-.008.816.027.134.027.294.096.448.182.077.042.15.147.15.314V8a.5.5 0 1 0 1 0V6.435l.106-.01c.316-.024.584-.01.708.04.118.046.3.207.486.43.081.096.15.19.2.259V8.5a.5.5 0 0 0 1 0v-1h.342a1 1 0 0 1 .995 1.1l-.271 2.715a2.5 2.5 0 0 1-.317.991l-1.395 2.442a.5.5 0 0 1-.434.252H6.035a.5.5 0 0 1-.416-.223l-1.433-2.15a1.5 1.5 0 0 1-.243-.666l-.345-3.105a.5.5 0 0 1 .399-.546L5 8.11V9a.5.5 0 0 0 1 0V1.75A.75.75 0 0 1 6.75 1M8.5 4.466V1.75a1.75 1.75 0 1 0-3.5 0v5.34l-1.2.24a1.5 1.5 0 0 0-1.196 1.636l.345 3.106a2.5 2.5 0 0 0 .405 1.11l1.433 2.15A1.5 1.5 0 0 0 6.035 16h6.385a1.5 1.5 0 0 0 1.302-.756l1.395-2.441a3.5 3.5 0 0 0 .444-1.389l.271-2.715a2 2 0 0 0-1.99-2.199h-.581a5 5 0 0 0-.195-.248c-.191-.229-.51-.568-.88-.716-.364-.146-.846-.132-1.158-.108l-.132.012a1.26 1.26 0 0 0-.56-.642 2.6 2.6 0 0 0-.738-.288c-.31-.062-.739-.058-1.05-.046zm2.094 2.025"/>
-                </svg>
+            <div class="p-3 border border-neutral-700 rounded-md">
+              <div class="flex items-center justify-between">
+                <p class="!mt-0">Select element</p>
+                <div
+                    class="border border-neutral-600 bg-neutral-400/20 bg-blue-100 p-1 text-neutral-500 items-center justify-center rounded-sm cursor-pointer hover:bg-neutral-500/40 transition-all duration-300"
+                    :class="{ '!bg-indigo-900/60 !border-indigo-600 !text-indigo-400': picking }"
+                    @click="setPickMode()"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-up-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M9.636 13.5a.5.5 0 0 1-.5.5H2.5A1.5 1.5 0 0 1 1 12.5v-10A1.5 1.5 0 0 1 2.5 1h10A1.5 1.5 0 0 1 14 2.5v6.636a.5.5 0 0 1-1 0V2.5a.5.5 0 0 0-.5-.5h-10a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h6.636a.5.5 0 0 1 .5.5"/>
+                    <path fill-rule="evenodd" d="M5 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1H6.707l8.147 8.146a.5.5 0 0 1-.708.708L6 6.707V10.5a.5.5 0 0 1-1 0z"/>
+                  </svg>
+                </div>
               </div>
 
               <div v-show="highlightElement">
                 <p class="!mt-2 pt-0">CLASS</p>
-                <input @change="updateComponent()" @input="updateElement('class')" ref="elementClass" type="text">
+                <input
+                    @change="updateComponent()"
+                    @input="updateElement('class')"
+                    ref="elementClass"
+                    type="text"
+                />
                 <p class="!mt-2">ID</p>
-                <input @change="updateComponent()" @input="updateElement('id')" ref="elementID" type="text" class="mb-2">
+                <input
+                    @change="updateComponent()"
+                    @input="updateElement('id')"
+                    ref="elementID"
+                    type="text"
+                    class="mb-2"
+                />
               </div>
             </div>
 
+            <div
+                ref="highlight"
+                class="fixed border border-purple-500 bg-purple-200 bg-opacity-25 pointer-events-none transition-all duration-100"
+                style="display: none;"
+                :class="{ '!bg-orange-300 !border-orange-600 !bg-opacity-25': highlightElement }"
+            ></div>
 
-            <div ref="highlight" class="fixed border border-purple-500 bg-purple-200 bg-opacity-25 pointer-events-none" style="display: none;"
-                 :class="{'!bg-orange-300 !border-orange-600 !bg-opacity-25' : highlightElement}"></div>
-            
-            <AceEditor @input="updateHighlighter()" v-model="form.css" class="shadow-sm rounded-md mt-4" />
+            <div class="mt-4">
+              <h3 class="text-base font-medium text-neutral-300 mb-4">CSS Editor</h3>
+              <AceEditor
+                  @input="updateHighlighter()"
+                  v-model="form.css"
+                  class="rounded-md border border-neutral-600 overflow-hidden"
+              />
+            </div>
 
             <p>Color picker</p>
             <ColorPicker />
-
           </div>
         </TabPanel>
-
       </TabPanels>
     </Tabs>
-
   </div>
 </template>
 
@@ -342,7 +525,6 @@ export default {
     Select,
     InputText,
     AceEditor,
-    ColorPicker,
     Checkbox,
     ColorPicker,
     FontPicker,
@@ -417,14 +599,14 @@ export default {
       const element = this.highlightElement;
 
       // Get the Vue element the selected element is in
-      var elementNode = element.__vueParentComponent;
-      
+      let elementNode = element.__vueParentComponent;
+
       // Get element node parent until it is a FormElement
       while (elementNode.type.name !== 'FormElement') {
         elementNode = elementNode.parent;
       }
 
-      var elementNode = elementNode.proxy;
+      elementNode = elementNode.proxy;
       elementNode.updateHTMLStructure();
     },
 
@@ -472,10 +654,10 @@ export default {
             let regex = new RegExp(this.classPrevValue + '$');
             element.className = element.className.replace(regex, elementClass);
           }
-          
+
           this.classPrevValue = elementClass;
         }
-        
+
         if (tag === 'id') {
           if (elementID) {
             element.setAttribute('givenId', elementID);
@@ -489,7 +671,7 @@ export default {
             let regex = new RegExp(this.idPrevValue + '$');
             element.id = element.id.replace(regex, elementID);
           }
-          
+
           this.idPrevValue = elementID;
         }
       }
@@ -515,7 +697,7 @@ export default {
       addEventListener("resize", this.highlightUpdate);
       document.querySelector('#content').addEventListener("scroll", this.highlightUpdate);
       document.addEventListener('mousemove', this.handleMouseMove);
-      
+
       this.$nextTick(() => {
         document.addEventListener('mousedown', this.handleClick);
       });
@@ -614,10 +796,15 @@ export default {
 
         // Update selected form for each key
         keys.forEach((key) => {
-          this.form.elements[index][key] = this.selectedElement[key];
+          // Create deep copies of array properties to prevent shared references
+          if (Array.isArray(this.selectedElement[key])) {
+            this.form.elements[index][key] = [...this.selectedElement[key]];
+          } else {
+            this.form.elements[index][key] = this.selectedElement[key];
+          }
         });
-
-        this.$emit('select', element);
+    
+        this.$emit('select', this.getSelectedElement());
 
       });
 
@@ -630,8 +817,20 @@ export default {
       if(this.selectedElement.answers.length === 1) {
         return;
       }
-      this.selectedElement.answers.splice(index, 1);
+      
+      // Create a new array without the removed option
+      const newAnswers = [...this.selectedElement.answers];
+      newAnswers.splice(index, 1);
+      
+      // Update the local selectedElement with the new answers
+      this.selectedElement.answers = newAnswers;
+      
+      // Get and update the actual form element
       const element = this.getSelectedElement();
+      if (element) {
+        element.answers = [...newAnswers]; // Clone again to be extra safe
+      }
+      
       this.$emit('select', element);
     },
 
@@ -639,8 +838,18 @@ export default {
      * Add option
      */
     addOption() {
-      this.selectedElement.answers.push('Answer ' + (this.selectedElement.answers.length + 1));
+      // Create a new array instead of mutating the existing one
+      const newAnswers = [...this.selectedElement.answers, 'Answer ' + (this.selectedElement.answers.length + 1)];
+      
+      // Update the local selectedElement with the new answers
+      this.selectedElement.answers = newAnswers;
+      
+      // Get and update the actual form element
       const element = this.getSelectedElement();
+      if (element) {
+        element.answers = [...newAnswers]; // Clone again to be extra safe
+      }
+      
       this.$emit('select', element);
     },
 
@@ -656,9 +865,14 @@ export default {
 
         // Update selected element
         keys.forEach((key) => {
-          this.selectedElement[key] = element[key];
+          // Create deep copies of array properties to prevent shared references
+          if (Array.isArray(element[key])) {
+            this.selectedElement[key] = [...element[key]];
+          } else {
+            this.selectedElement[key] = element[key];
+          }
         });
-      });      
+      });
 
     },
 
@@ -730,9 +944,8 @@ export default {
 </script>
 
 <style scoped>
-
 /* input range have no shadow */
-input[type="range"] {
+input[type='range'] {
   @apply shadow-none;
 }
 
@@ -741,7 +954,8 @@ input[type="range"] {
   border: none;
   padding-top: 4px;
   padding-block: 4px;
-  border-bottom: 1px solid oklch(27.8% 0.033 256.848);
+  border-bottom: 1px solid;
+  @apply border-b-neutral-800;
 }
 :deep(.p-accordionheader) {
   border: none;
@@ -752,23 +966,12 @@ input[type="range"] {
   border: none;
 }
 :deep(.p-accordion) {
-  border-top: 1px solid oklch(27.8% 0.033 256.848);
+  @apply border-t border-t-neutral-800;
 }
 
 /* Input style */
 input {
-  @apply
-  w-full
-  p-1.5
-  border
-  rounded-sm
-  shadow
-  transition
-  duration-300
-  bg-gray-800
-  border-gray-600
-  text-gray-200
-  focus:outline-none
+  @apply w-full p-1.5 border rounded-sm shadow transition duration-300 bg-neutral-800 border-neutral-600 text-neutral-200 focus:outline-none;
 }
 
 .custom-tabs .p-tabview-nav {
@@ -780,7 +983,7 @@ input {
 p {
   margin-top: 20px;
   font-size: 16px !important;
-  @apply text-gray-400;
+  @apply text-neutral-400;
 }
 .p-tabpanels {
   @apply h-full;
@@ -789,52 +992,33 @@ p {
   @apply px-2 bg-zinc-950 py-2 rounded border-zinc-500 border-solid;
   border-width: 1px;
 }
-</style>
-
-<style scoped>
 
 /* Tabs */
-.p-tab {
-  @apply
-  border-none
-  !border-r-gray-700
-  !border-l-gray-700
-  !border-b-gray-700
-  p-1
-  transition
-  duration-150;
-  border-left-style: solid !important;
-  border-bottom-style: solid !important;
-  border-right-style: solid !important;
-  border-left-width: 0.25px;
-  border-bottom-width: 0.25px;
-  border-right-width: 0.25px;
-}
-.p-tab:hover {
-  @apply
-  border-none
-  !border-r-gray-600
-  !border-l-gray-600
-  !border-b-gray-600;
-}
-.p-tab-active {
-  @apply
-  bg-blue-600/20
-  text-white
-  !border-b-blue-600
-  !border-l-blue-600
-  !border-t-blue-600
-  !border-r-blue-600;
+.tab-list {
+  @apply flex border-b border-b-neutral-800;
 }
 
+.tab-item {
+  @apply text-neutral-400 py-2 text-center cursor-pointer transition-colors duration-200 border-none;
+  border-bottom: 2px solid transparent;
+}
 
+.tab-item.p-tab-active {
+  @apply text-white border-b-blue-500;
+}
+
+.tab-item:hover:not(.p-tab-active) {
+  @apply text-neutral-300;
+}
+
+.p-tabpanels {
+  padding: 0; /* Remove default padding from tab panels */
+}
 </style>
 
 <style>
-
-/* Tabs */
+/* Tabs - Global styles for PrimeVue components */
 .p-tablist-content .p-tablist-tab-list {
   border: none;
 }
-
 </style>

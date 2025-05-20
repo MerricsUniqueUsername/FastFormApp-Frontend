@@ -1,6 +1,6 @@
 <template>
 
-  <div id="app" class="h-screen w-screen flex flex-col relative overflow-hidden">
+  <div id="app" class="h-screen w-screen flex flex-col relative overflow-hidden dark bg-neutral-950">
 
     <!-- View form -->
     <Form ref="form" @close="formPreviewOpen = false" v-if="formPreviewOpen" :form="form" />

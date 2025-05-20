@@ -1,6 +1,6 @@
 <template>
     <div 
-      class="radio-container inline-flex items-center cursor-pointer"
+      class="radio-container inline-flex items-center cursor-pointer w-full"
       @click="selectRadio"
       :class="{ 'radio-disabled': disabled }"
     >
@@ -30,7 +30,7 @@
   
       <!-- Display the value next to the radio button -->
       <div 
-        class="ml-2 text-sm font-medium text-gray-700 cursor-pointer text-edit"
+        class="ml-2 text-sm font-medium text-gray-700 cursor-pointer text-edit w-full"
         :class="{ 'text-gray-400': disabled }"
         @click.stop="selectRadio"
       >

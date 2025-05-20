@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-800 border border-gray-600 text-gray-400 rounded-sm shadow-sm p-1.5">
+  <div class="bg-neutral-800 border border-neutral-600 text-neutral-400 rounded-sm shadow-sm p-1.5">
     #
     <input
       v-model="colorHEXInternal"
@@ -11,7 +11,7 @@
     <ColorPicker
       v-model="colorHSB"
       format="hsb"
-      @change="updateHEX"
+      @change="handleColorChange"
       ref="color_picker"
       class="w-12 float-right shadow-sm"
     />
@@ -36,7 +36,8 @@ export default {
   data() {
     return {
       colorHSB: null,
-      colorHEXInternal: this.modelValue
+      colorHEXInternal: this.modelValue,
+      previousHSB: null
     };
   },
   methods: {
@@ -96,6 +97,7 @@ export default {
       }
 
       this.colorHSB = { h: Math.round(h), s: Math.round(s * 100), b: Math.round(v * 100) };
+      this.previousHSB = {...this.colorHSB};
     },
 
     updateHSB() {
@@ -105,6 +107,23 @@ export default {
     updateHEX() {
       this.colorHEXInternal = this.hsbToHex(this.colorHSB);
       this.emitUpdate();
+    },
+
+    handleColorChange() {
+      // If we have a previous HSB value and only the hue has changed
+      // preserve the previous saturation and brightness values
+      if (this.previousHSB && this.colorHSB.h !== this.previousHSB.h &&
+          (this.colorHSB.s === 100 || this.colorHSB.b === 100)) {
+        this.colorHSB = {
+          h: this.colorHSB.h,
+          s: this.previousHSB.s,
+          b: this.previousHSB.b
+        };
+      }
+
+      // Update the HEX value and store the current HSB for future reference
+      this.updateHEX();
+      this.previousHSB = {...this.colorHSB};
     },
 
     sanitizeInput(event) {
@@ -120,6 +139,7 @@ export default {
   },
   mounted() {
     this.hexToHsb();
+    this.previousHSB = {...this.colorHSB};
   },
   watch: {
     modelValue: {
@@ -128,6 +148,7 @@ export default {
         if (newValue !== this.colorHEXInternal) {
           this.colorHEXInternal = newValue;
           this.hexToHsb();
+          this.previousHSB = {...this.colorHSB};
         }
       }
     }
@@ -140,7 +161,6 @@ export default {
   width: 48px;
   height: 24px;
   border-radius: 2px;
-  background-color: var(--p-colorpicker-preview-background);
   transition: background-color 0.2s ease;
 }
 :deep(input) {

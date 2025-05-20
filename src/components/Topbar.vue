@@ -1,12 +1,12 @@
 <template>
-  <div class="h-16 w-full bg-gray-900 border-b border-gray-800 flex items-center justify-between px-4">
+  <div class="h-16 w-full bg-neutral-950 border-b border-neutral-800 flex items-center justify-between px-4">
     <div class="flex items-center space-x-4">
       <input 
         v-model="form.title" 
         type="text" 
-        class="bg-gray-800 text-gray-200 border border-gray-700 rounded-md px-4 py-1 text-base shadow-sm 
+        class="bg-neutral-800 text-neutral-200 border border-neutral-700 rounded-md px-4 py-1 text-base shadow-sm 
                focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out 
-               placeholder-gray-500"
+               placeholder-neutral-500"
         placeholder="Form Title"
       />
     </div>
@@ -15,7 +15,7 @@
       <!-- Preview button -->
       <button 
         @click="$emit('openPreview')" 
-        class="bg-gray-800 border border-gray-700 text-gray-300 p-2 rounded-md 
+        class="bg-neutral-800 border border-neutral-700 text-neutral-300 p-2 rounded-md 
                hover:bg-orange-500/10 hover:border-orange-400 hover:text-orange-400 
                transition-all duration-200 flex items-center justify-center space-x-2"
       >
