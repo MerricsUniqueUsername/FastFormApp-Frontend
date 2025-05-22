@@ -20,17 +20,19 @@
           <div class="p-4">
             <!-- Question type -->
             <p class="text-neutral-400" style="margin-top: 0;">Type</p>
-            <Select
-                value-type="model-value"
-                input="type"
-                v-model="selectedElement.type"
-                :options="questionTypes"
-                optionLabel="label"
-                optionValue="value"
-                class="w-full"
-                placeholder="Select a type"
-                @change="updateSelectedElement($event.value)"
-            />
+            <div class="border rounded-sm border-neutral-700">
+              <Select
+                  value-type="model-value"
+                  input="type"
+                  v-model="selectedElement.type"
+                  :options="questionTypes"
+                  optionLabel="label"
+                  optionValue="value"
+                  class="w-full"
+                  placeholder="Select a type"
+                  @change="updateSelectedElement($event.value)"
+              />
+            </div>
 
             <!-- Variable name -->
             <p class="text-neutral-400">Variable name</p>
@@ -290,7 +292,7 @@
               <p>Show time</p>
               <input
                   type="checkbox"
-                  @change="updateSelectedElement"
+                  @change="updateSelectedElement(); if(selectedElement.showTime) { selectedElement.timeOnly = false; }"
                   v-model="selectedElement.showTime"
                   class="!h-4 !w-4 relative"
               />
@@ -316,20 +318,22 @@
                 v-if="selectedElement.type === 'date' && selectedElement.showTime"
             >
               <p>Hour format</p>
-              <Select
-                  value-type="model-value"
-                  input="hourFormat"
-                  v-model="selectedElement.hourFormat"
-                  :options="[
-                  { 'label': '12', 'value': '12' },
-                  { 'label': '24', 'value': '24' },
-                ]"
-                  optionLabel="label"
-                  optionValue="value"
-                  class="w-full"
-                  placeholder="Select a format"
-                  @change="updateSelectedElement"
-              />
+              <div class="border rounded-sm border-neutral-600">
+                <Select
+                    value-type="model-value"
+                    input="hourFormat"
+                    v-model="selectedElement.hourFormat"
+                    :options="[
+                    { 'label': '12', 'value': '12' },
+                    { 'label': '24', 'value': '24' },
+                  ]"
+                    optionLabel="label"
+                    optionValue="value"
+                    class="w-full"
+                    placeholder="Select a format"
+                    @change="updateSelectedElement"
+                />
+              </div>
             </div>
 
             <br /><br />

@@ -689,10 +689,12 @@ textarea {
   shadow
   transition
   padding
-  input-color;
+  input-color
 }
 .p-select-list-container {
   @apply
+  mt-1
+  border
   dropdown;
 }
 .p-select-list-container .p-select-option {
