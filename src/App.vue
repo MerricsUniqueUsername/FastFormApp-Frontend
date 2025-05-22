@@ -12,7 +12,7 @@
     <ConditionBuilder v-show="conditionBuilderOpen" @close="conditionBuilderOpen = false" :variables="variables" :form="form" :selectedId="selectedId" ref="condition_builder" class="absolute z-50" />
 
     <!-- Topbar -->
-    <Topbar @openPreview="formPreviewOpen = true" class="relative" :form="form" />
+    <Topbar @openPreview="formPreviewOpen = true" class="relative z-50" :form="form" />
 
     <!-- Body -->
     <div class="flex flex-col relative" style="height: calc(100% - 4rem);">
@@ -22,7 +22,7 @@
         <LeftSidebar ref="left_sidebar" @select="selectElement" @openMenu="openMenu" :form="form" :selectedId="selectedId" />
 
         <!-- Main Content -->
-        <FormPreview ref="form_preview" :form="form" @select="setSelectedId" />
+        <FormPreview ref="form_preview" :form="form" @select="setSelectedId" @delete="deleteSelectedElement" class="relative z-1" />
 
         <!-- Right Sidebar -->
         <RightSidebar ref="right_sidebar" :form="form" @select="selectElement" @openConditionEditor="openConditionEditor" :selectedId="selectedId" />
@@ -66,6 +66,19 @@ export default {
   },
 
   methods: {
+
+    /**
+     * Delete selected element
+     */
+    deleteSelectedElement(element) {
+      const id = element.element.id;
+      const index = this.form.elements.findIndex((el) => el.id === id);
+      if (index !== -1) {
+        this.form.elements.splice(index, 1);
+        this.$refs.form_preview.updateSelector();
+        this.$refs.right_sidebar.loadSelectedElement(null);
+      }
+    },
 
     /**
      * Update variable list

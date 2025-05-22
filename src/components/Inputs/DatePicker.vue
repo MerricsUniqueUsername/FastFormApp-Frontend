@@ -21,7 +21,7 @@
           v-if="showCalendar" 
           ref="calendar"
           class="time-menu fixed z-[550] my-1"
-          :class="timeOnly ? 'w-64' : 'w-72'"
+          :class="timeOnly ? 'h-32' : 'w-56'"
           :style="calendarPosition"
         >
           <!-- Show calendar only if not in timeOnly mode -->
@@ -29,29 +29,29 @@
             <!-- Calendar header with month/year navigation -->
             <div class="time-header flex justify-between items-center p-2">
               <button @click="previousYear" class="p-1 rounded-full time-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
                 </svg>
               </button>
               
               <button @click="previousMonth" class="p-1 rounded-full time-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
               
-              <span class="mx-1 font-medium">
+              <span class="mx-1 text-xs">
                 {{ monthNames[currentMonth] }} {{ currentYear }}
               </span>
               
               <button @click="nextMonth" class="p-1 rounded-full time-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
               
               <button @click="nextYear" class="p-1 rounded-full time-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7m-8-14l7 7-7 7" />
                 </svg>
               </button>
@@ -68,7 +68,7 @@
                 v-for="(day, index) in calendarDays" 
                 :key="index" 
                 @click="selectDate(day)" 
-                class="rounded-full p-1 text-sm cursor-pointer aspect-square flex items-center justify-center"
+                class="rounded-full p-1 text-xs cursor-pointer aspect-square flex items-center justify-center"
                 :class="{
                   'not-day-in-month': !day.currentMonth,
                   'selected-day': isSelectedDate(day),
@@ -89,16 +89,16 @@
                   @click="incrementHour" 
                   class="p-1 rounded-full time-btn"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                   </svg>
                 </button>
-                <div class="text-center py-1 w-10">{{ formatHour(selectedHour) }}</div>
+                <div class="text-center py-1 w-10 text-sm">{{ formatHour(selectedHour) }}</div>
                 <button 
                   @click="decrementHour" 
                   class="p-1 rounded-full time-btn"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
@@ -112,16 +112,16 @@
                   @click="incrementMinute" 
                   class="p-1 rounded-full time-btn"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                   </svg>
                 </button>
-                <div class="text-center py-1 w-10">{{ selectedMinute.toString().padStart(2, '0') }}</div>
+                <div class="text-center py-1 w-10 text-sm">{{ selectedMinute.toString().padStart(2, '0') }}</div>
                 <button 
                   @click="decrementMinute" 
                   class="p-1 rounded-full time-btn"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
@@ -140,10 +140,10 @@
           </div>
 
           <!-- Action buttons -->
-          <div class="p-2 flex justify-end gap-2">
+          <div class="flex justify-center">
             <button 
               @click="clearDate" 
-              class="time-btn px-3 py-1 text-sm rounded"
+              class="time-btn px-3 text-sm rounded"
             >
               Clear
             </button>

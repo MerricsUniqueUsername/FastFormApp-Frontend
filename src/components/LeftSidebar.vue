@@ -26,7 +26,7 @@
           class="w-full bg-neutral-800 text-gray-300 text-sm rounded-md px-3 py-2 pl-8 border border-neutral-700
                  focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
         />
-        <svg class="absolute left-2.5 top-2.5 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="absolute left-2.5 top-2.5 text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
@@ -64,7 +64,7 @@
 
       <!-- Empty state -->
       <div v-if="filteredElements.length === 0" class="flex flex-col items-center justify-center py-10 text-center">
-        <div class="bg-gray-800 p-3 rounded-full mb-3">
+        <div class="bg-neutral-800 p-3 rounded-full mb-3">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="9" y1="9" x2="15" y2="9"></line>
@@ -72,7 +72,7 @@
             <line x1="9" y1="15" x2="13" y2="15"></line>
           </svg>
         </div>
-        <p class="text-gray-400 text-sm">No elements</p>
+        <p class="text-neutral-400 text-sm">No elements</p>
         <button 
           @click="$emit('openMenu')" 
           class="mt-3 text-blue-500 text-xs flex items-center hover:text-blue-400"
@@ -86,7 +86,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="mt-auto py-3 px-4 border-t border-gray-800 bg-gray-900/50">
+    <div class="mt-auto py-3 px-4 border-t border-neutral-800 bg-neutral-900/50">
       <p class="text-xs text-gray-500">{{ form.elements ? form.elements.length : 0 }} elements</p>
     </div>
   </div>

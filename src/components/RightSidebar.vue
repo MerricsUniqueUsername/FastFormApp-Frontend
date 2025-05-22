@@ -339,6 +339,7 @@
         <!-- Design -->
         <TabPanel value="design">
           <div class="p-4">
+            <h2 class="text-neutral-400">Theme editor</h2>
             <Accordion :value="[]" multiple>
               <!-- Color Scheme -->
               <AccordionPanel value="colors">
@@ -430,6 +431,42 @@
                 </AccordionContent>
               </AccordionPanel>
             </Accordion>
+
+            <div class="mt-4 flex">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-stars mt-1.5" viewBox="0 0 16 16">
+                <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.73 1.73 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.73 1.73 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.73 1.73 0 0 0 3.407 2.31zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+              </svg>
+              <h2 class="text-neutral-400 ml-1">AI theme editor</h2>
+            </div>
+            <div class="relative">
+              <textarea
+                  id="auto-textarea"
+                  class="block w-full !h-24 px-2 py-2 border resize-none overflow-hidden pr-12 border-neutral-700 rounded-md"
+                  placeholder="How can I edit your theme?"
+                  rows="1"
+                  v-model="aiPromptText"
+                  @keydown.enter="aiGenerateTheme"
+                  :disabled="isLoading"
+              ></textarea>
+              <button
+                  id="send-button"
+                  class="absolute text-neutral-400 right-3 bottom-3 p-1 rounded-full border shadow-sm hover:shadow"
+                  aria-label="Send message"
+                  @click="aiGenerateTheme"
+                  :disabled="isLoading"
+              >
+                <svg v-if="!isLoading" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+                <svg v-else class="animate-spin h-3 w-3 text-neutral-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </button>
+            </div>
+            <div v-if="aiMessage.text" :class="{'text-green-500': aiMessage.type === 'success', 'text-red-500': aiMessage.type === 'error'}" class="mt-1 text-sm">
+              {{ aiMessage.text }}
+            </div>
           </div>
         </TabPanel>
 
@@ -511,6 +548,7 @@ import AceEditor from './AceEditor.vue';
 import Checkbox from 'primevue/checkbox';
 import ColorPicker from './ColorPicker.vue';
 import FontPicker from './FontPicker.vue';
+import axios from 'axios';
 
 
 export default {
@@ -552,6 +590,15 @@ export default {
       picking: false,
       classPrevValue: '',
       idPrevValue: '',
+      backendURL: 'http://127.0.0.1:8000', // Ensure this is your backend URL
+
+      // AI Theme editor state
+      aiPromptText: '',
+      isLoading: false,
+      aiMessage: {
+        type: '', // 'success' or 'error'
+        text: ''
+      },
 
       // Store data from element in here to update the form
       selectedElement: {
@@ -591,6 +638,50 @@ export default {
   },
   emits: ['select', 'openConditionEditor'],
   methods: {
+
+    /**
+     * Generate AI theme
+     */
+    aiGenerateTheme(event) {
+      event.preventDefault();
+      const prompt = this.aiPromptText; // Use v-model bound data property
+
+      // Make sure prompt actually exists
+      if (!prompt) {
+        return;
+      }
+
+      this.isLoading = true; // Set loading state
+      this.aiMessage = { type: '', text: '' }; // Clear previous message
+
+      const data = {
+        query: prompt,
+        style: this.form.theme,
+      };
+
+      axios.post(`${this.backendURL}/genstyle/`, data)
+          .then(res => {
+            const theme = res.data.response.replaceAll('```json', '').replaceAll('```', '');
+            const themeObj = JSON.parse(theme);
+            this.form.theme = {
+              ...this.form.theme,
+              ...themeObj,
+            };
+            this.aiMessage = { type: 'success', text: 'Theme updated successfully!' };
+            this.aiPromptText = ''; // Clear prompt on success
+          })
+          .catch(error => {
+            console.error('Error generating theme:', error);
+            this.aiMessage = { type: 'error', text: 'Failed to generate theme. Please try again.' };
+          })
+          .finally(() => {
+            this.isLoading = false; // Reset loading state
+            // Clear message after a few seconds
+            setTimeout(() => {
+              this.aiMessage = { type: '', text: '' };
+            }, 3000); // Message disappears after 3 seconds
+          });
+    },
 
     /**
      * Update selected element component to keep HTML structure correct
@@ -796,14 +887,17 @@ export default {
 
         // Update selected form for each key
         keys.forEach((key) => {
-          // Create deep copies of array properties to prevent shared references
-          if (Array.isArray(this.selectedElement[key])) {
-            this.form.elements[index][key] = [...this.selectedElement[key]];
-          } else {
-            this.form.elements[index][key] = this.selectedElement[key];
+          try {
+            // Create deep copies of array properties to prevent shared references
+            if (Array.isArray(this.selectedElement[key])) {
+              this.form.elements[index][key] = [...this.selectedElement[key]];
+            } else {
+              this.form.elements[index][key] = this.selectedElement[key];
+            }
           }
+          catch (e) {}
         });
-    
+
         this.$emit('select', this.getSelectedElement());
 
       });
@@ -817,20 +911,20 @@ export default {
       if(this.selectedElement.answers.length === 1) {
         return;
       }
-      
+
       // Create a new array without the removed option
       const newAnswers = [...this.selectedElement.answers];
       newAnswers.splice(index, 1);
-      
+
       // Update the local selectedElement with the new answers
       this.selectedElement.answers = newAnswers;
-      
+
       // Get and update the actual form element
       const element = this.getSelectedElement();
       if (element) {
         element.answers = [...newAnswers]; // Clone again to be extra safe
       }
-      
+
       this.$emit('select', element);
     },
 
@@ -840,16 +934,16 @@ export default {
     addOption() {
       // Create a new array instead of mutating the existing one
       const newAnswers = [...this.selectedElement.answers, 'Answer ' + (this.selectedElement.answers.length + 1)];
-      
+
       // Update the local selectedElement with the new answers
       this.selectedElement.answers = newAnswers;
-      
+
       // Get and update the actual form element
       const element = this.getSelectedElement();
       if (element) {
         element.answers = [...newAnswers]; // Clone again to be extra safe
       }
-      
+
       this.$emit('select', element);
     },
 
@@ -866,11 +960,14 @@ export default {
         // Update selected element
         keys.forEach((key) => {
           // Create deep copies of array properties to prevent shared references
-          if (Array.isArray(element[key])) {
-            this.selectedElement[key] = [...element[key]];
-          } else {
-            this.selectedElement[key] = element[key];
+          try {
+            if (Array.isArray(element[key])) {
+              this.selectedElement[key] = [...element[key]];
+            } else {
+              this.selectedElement[key] = element[key];
+            }
           }
+          catch (e) {}
         });
       });
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-neutral-800 border border-neutral-600 text-neutral-400 rounded-sm shadow-sm p-1.5">
+  <div class="bg-neutral-800 border border-neutral-600 text-neutral-400 rounded-sm shadow-sm p-1.5 mb-2">
     #
     <input
       v-model="colorHEXInternal"

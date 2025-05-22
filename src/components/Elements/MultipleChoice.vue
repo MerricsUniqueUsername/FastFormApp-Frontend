@@ -5,7 +5,7 @@
 <!--      <AddButton @click="addAnswer" class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto" />-->
 <!--    </div>-->
 
-    <div ref="element" class="my-6 w-full">
+    <div ref="element" class="my-6 w-full element">
       <p @input="handleQuestionChange" ref="question" class="edit-text parent question w-full" v-text="element.question" v-once/>
 
       <div ref="answer" v-for="(answer, index) in element.answers" :key="index" class="flex items-center gap-2 select parent w-full">

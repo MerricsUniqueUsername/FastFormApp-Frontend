@@ -1,14 +1,21 @@
 <template>
 
-  <!-- Selector for element -->
-  <div v-show="formInteract && selectedElement" ref="outline" class="fixed border border-dashed z-20 border-neutral-500 pointer-events-none"></div>
+<!-- Selector for HTML element -->
+<div ref="html_outline" v-show="selectedHTMLElement && formInteract" class="fixed border z-40 border-blue-400 pointer-events-none"></div>
 
-  <!-- Selector for HTML element -->
-  <div ref="html_outline" v-show="selectedHTMLElement && formInteract" class="fixed border z-30 border-blue-400 pointer-events-none"></div>
+<!-- Selector for element -->
+<div v-show="formInteract && selectedElement" ref="outline" class="fixed pointer-events-none border-neutral-400 border-dashed border z-30">
+  <div class="bg-red-500 text-white w-fit p-1 absolute top-[calc(50%-12px)] -right-8 rounded-full cursor-pointer !pointer-events-auto" @click="deleteSelectedElement">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+    </svg>
+  </div>
+</div>
 
   <!-- Content -->
   <div class="w-2/3 h-[calc(100%-30px)] bg-neutral-950" id="content">
-    <div class="p-4 bg-white rounded-2xl m-3 shadow-sm h-full border border-neutral-300 formContainer overflow-y-auto">
+    <div class="p-4 bg-white rounded-2xl m-3 shadow-sm h-full border border-neutral-500 formContainer overflow-y-auto" id="formContainer">
 
       <!-- Form -->
       <div ref="form" class="text-black m-16 relative form">
@@ -35,7 +42,7 @@ import FormElement from './FormElement.vue'
 
 export default {
   name: 'FormPreview',
-  emits: ['select'],
+  emits: ['select', 'delete'],
   inject: ['formInteract'],
   components: {
     FormElement,
@@ -54,6 +61,16 @@ export default {
     }
   },
   methods: {
+
+    /**
+     * Delete selected element
+     */
+    deleteSelectedElement() {
+      this.$emit('delete', this.selectedElement);
+      this.selectedElement = null;
+      this.selectedHTMLElement = null;
+      this.updateSelector();
+    },
 
     /**
      * Return all form elements
@@ -109,12 +126,15 @@ export default {
         this.selectedHTMLElement = null;
       }
 
-      // Puts ohtline overlaying selected element using client rect
+      // Puts outline overlaying selected element using client rect
       const rect = this.selectedElement.$refs.element.getBoundingClientRect();
       this.$refs.outline.style.top = `${rect.top}px`;
       this.$refs.outline.style.left = `${rect.left}px`;
       this.$refs.outline.style.width = `${rect.width}px`;
       this.$refs.outline.style.height = `${rect.height}px`;
+
+      // Update custom menu position
+      this.selectedElement.updateCustomMenu();
 
       // Put html outline overlaying selected HTML element
       if(!this.selectedHTMLElement) return;
@@ -185,9 +205,12 @@ export default {
         .form .element .question {
           color: #${theme.textColor};
         }
+        .form .label {
+          color: #${theme.textColor};
+        }
         .form .element input, .form .input {
           background-color: #${theme.inputBaseBackground};
-          border: 1px solid #${theme.borderColor} !important;
+          border: 1px solid #${theme.borderColor};
           color: #${theme.textColor};
           padding: ${theme.inputPadding}px;
           font-size: ${theme.inputFontSize}px !important;
@@ -219,7 +242,7 @@ export default {
         }
         .form .element textarea {
           background-color: #${theme.inputBaseBackground};
-          border: 1px solid #${theme.borderColor} !important;
+          border: 1px solid #${theme.borderColor};
           color: #${theme.textColor};
           padding: ${theme.inputPadding}px;
           font-size: ${theme.inputFontSize}px;
@@ -451,7 +474,9 @@ export default {
     form: {
       deep: true,
       handler() {
-        this.updateSelector();
+        this.$nextTick(() => {
+          this.updateSelector();
+        });
       }
     },
     'form.theme': {
@@ -459,6 +484,10 @@ export default {
         if(newTheme) {
           this.updateTheme(newTheme);
         }
+        setTimeout(() => {
+          // Add a small delay to allow transitions to finish
+          this.updateSelector();
+        }, 120); // Adjust the delay as needed
       },
       deep: true,
       immediate: true
@@ -466,6 +495,7 @@ export default {
     'form.css': {
       handler(newCSS) {
         this.updateCSS();
+        this.updateSelector();
       },
       deep: true,
       immediate: true
@@ -475,13 +505,17 @@ export default {
   mounted() {
 
     // Check if scroll
-    document.getElementById('content').onscroll = () => {
-      this.updateSelector();
+    document.getElementById('formContainer').onscroll = () => {
+      this.$nextTick(() => {
+        this.updateSelector();
+      });
     }
 
     // Check if resize screen
     window.onresize = () => {
-      this.updateSelector();
+      this.$nextTick(() => {
+        this.updateSelector();
+      });
     }
 
     // Wait a tick then update theme
@@ -498,16 +532,11 @@ export default {
 
 /* Style */
 .input-border {
-  @apply 
-  rounded-sm 
-  border border-solid
-  border-neutral-400
 }
 .input-color {
   @apply
   text-neutral-300
   bg-neutral-800
-  !border-neutral-700;
 }
 .placeholder {
   @apply
@@ -573,7 +602,6 @@ h1 {
 /* Paragraph */
 p {
   @apply
-  text-neutral-700
   leading-relaxed;
 }
 

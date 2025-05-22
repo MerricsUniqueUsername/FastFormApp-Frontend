@@ -91,6 +91,18 @@ export default {
   methods: {
 
     /**
+     * Handle custom menu update
+     */
+    updateCustomMenu() {
+      this.$nextTick(() => {
+        try {
+          this.$refs.component.updateCustomMenu();
+        }
+        catch (error) {}
+      })
+    },
+
+    /**
      * Handles input change
      */
     input(value) {

@@ -40,7 +40,7 @@
 
     <!-- Display the value next to the checkbox -->
     <div 
-      class="ml-2 text-sm font-medium text-gray-700 cursor-pointer"
+      class="ml-2 text-sm font-medium text-gray-700 cursor-pointer label"
       :class="{ 'text-gray-400': disabled }"
       @click.stop="toggleCheckbox"
     >

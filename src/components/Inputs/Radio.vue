@@ -30,7 +30,7 @@
   
       <!-- Display the value next to the radio button -->
       <div 
-        class="ml-2 text-sm font-medium text-gray-700 cursor-pointer text-edit w-full"
+        class="ml-2 text-sm font-medium text-gray-700 cursor-pointer text-edit w-full label"
         :class="{ 'text-gray-400': disabled }"
         @click.stop="selectRadio"
       >
