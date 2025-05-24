@@ -1,10 +1,10 @@
 <template>
 
 <!-- Selector for HTML element -->
-<div ref="html_outline" v-show="selectedHTMLElement && formInteract" class="fixed border z-40 border-blue-400 pointer-events-none"></div>
+<div ref="html_outline" v-show="!isDragging && selectedHTMLElement && formInteract" class="fixed border z-40 border-blue-400 pointer-events-none"></div>
 
 <!-- Selector for element -->
-<div v-show="formInteract && selectedElement" ref="outline" class="fixed pointer-events-none border-neutral-400 border-dashed border z-30">
+<div v-show="!isDragging && formInteract && selectedElement" ref="outline" class="fixed pointer-events-none border-neutral-400 border-dashed border z-30">
   <div class="bg-red-500 text-white w-fit p-1 absolute top-[calc(50%-12px)] -right-8 rounded-full cursor-pointer !pointer-events-auto" @click="deleteSelectedElement">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
       <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
@@ -59,6 +59,7 @@ export default {
       selectedElement: null,
       selectedHTMLElement: null,
       test: 1,
+      isDragging: false, // Added for drag operation
     }
   },
   methods: {
@@ -533,12 +534,20 @@ export default {
     if (this.$refs.form) {
       new Sortable(this.$refs.form, {
         animation: 150,
-        handle: '.drag-handle', // We'll add this class to FormElement.vue
+        handle: '.drag-handle',
+        onStart: () => {
+          this.isDragging = true;
+        },
         onEnd: (evt) => {
           const elementToMove = this.form.elements.splice(evt.oldIndex, 1)[0];
           this.form.elements.splice(evt.newIndex, 0, elementToMove);
-          // Assuming Vue's reactivity handles the update in App.vue
-          // If not, an event like this.$emit('update:formElements', this.form.elements) would be needed.
+          
+          this.isDragging = false;
+          this.$nextTick(() => {
+            // Ensure the selector updates if an element is selected
+            // The existing updateSelector already checks if this.selectedElement is null
+            this.updateSelector();
+          });
         },
         ghostClass: 'sortable-ghost',
         chosenClass: 'sortable-chosen',

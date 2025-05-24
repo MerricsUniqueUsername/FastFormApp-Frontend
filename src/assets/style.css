@@ -40,8 +40,10 @@ body {
 .drag-handle {
   cursor: grab;
   user-select: none; /* Prevent text selection */
-  margin-right: 10px; /* Adjust as needed for alignment */
-  /* Add other styles like padding, font-size, or color if desired */
+  font-size: 2em;   /* Increased from 1.5em */
+  padding: 0 5px;   /* Ensure padding is set */
+  margin-right: 8px; /* Ensure correct margin for flex layout */
+  /* Add other styles like color if desired */
 }
 
 /* SortableJS helper classes */
