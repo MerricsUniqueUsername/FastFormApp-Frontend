@@ -1,20 +1,6 @@
 <template>
 
   <div>
-    <!-- Custom menu -->
-<!--    <div ref="custom_menu" v-show="selected" class="fixed pointer-events-none z-10">-->
-<!--      -->
-<!--      &lt;!&ndash; Inputs &ndash;&gt;-->
-<!--      <div class="absolute bottom-0 left-[50%] translate-y-full -translate-x-1/2 pointer-events-auto text-white w-full border border-gray-400 rounded-sm bg-neutral-800">-->
-<!--        <div class="w-full" v-for="(answer, index) in localAnswers" :key="index" type="text">-->
-<!--          <RemoveButton @click="removeAnswer(index)" class="absolute -translate-x-full translate-y-1/2" />-->
-<!--          <input class="p-1 w-full text-neutral-200 bg-neutral-800 border-t border-t-gray-600" v-model="localAnswers[index]" @input="syncAnswers">-->
-<!--        </div>-->
-<!--        <AddButton class="translate-y-full bottom-0 absolute -translate-x-1/2 left-[50%] pointer-events-auto" @click="addAnswer" />-->
-<!--      </div>-->
-
-<!--    </div>-->
-
     <div ref="element" class="my-6">
       <p @input="handleQuestionChange" ref="question" class="edit-text parent question w-full" v-text="element.question" v-once/>
       <Select

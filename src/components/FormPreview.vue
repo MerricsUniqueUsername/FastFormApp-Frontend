@@ -240,6 +240,10 @@ export default {
           color: #${theme.textColor};
           outline: none;
         }
+        .form .element .p-inputnumber-button-group {
+          margin-right: 9px;
+          color: #${theme.textColor};
+        }
         .form .element textarea {
           background-color: #${theme.inputBaseBackground};
           border: 1px solid #${theme.borderColor};
@@ -637,10 +641,11 @@ textarea {
 /* Number input */
 .p-inputnumber {
   @apply 
-  w-full;
+  w-full
+  transition-all
 }
 .p-inputnumber input {
-  @apply rounded-sm;
+  @apply rounded-sm transition-all duration-150;
 }
 .p-inputnumber-increment-button, .p-inputnumber-decrement-button {
   @apply 

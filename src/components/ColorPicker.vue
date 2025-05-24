@@ -1,30 +1,28 @@
 <template>
-  <div class="bg-neutral-800 border border-neutral-600 text-neutral-400 rounded-sm shadow-sm p-1.5 mb-2">
-    #
-    <input
-      v-model="colorHEXInternal"
-      @input="sanitizeInput"
-      type="text"
-      class="w-2/3"
-      maxlength="6"
-    >
-    <ColorPicker
-      v-model="colorHSB"
-      format="hsb"
-      @change="handleColorChange"
-      ref="color_picker"
-      class="w-12 float-right shadow-sm"
-    />
+  <div class="bg-neutral-800 border border-neutral-600 text-neutral-400 rounded-sm shadow-sm p-1.5 mb-2 flex items-center justify-between">
+    <div class="flex items-center">
+      #
+      <input
+        v-model="colorHEXInternal"
+        @input="sanitizeInput"
+        type="text"
+        class="w-2/3 ml-1"
+        maxlength="6"
+      >
+    </div>
+    <button
+      ref="pickrButton"
+      class="pickr-button w-12 h-6 shadow-sm rounded-sm"
+      :style="{ backgroundColor: '#' + colorHEXInternal }"
+    ></button>
   </div>
 </template>
 
 <script>
-import ColorPicker from 'primevue/colorpicker';
+import Pickr from '@simonwep/pickr';
+import '@simonwep/pickr/dist/themes/nano.min.css'; // Import a theme
 
 export default {
-  components: {
-    ColorPicker
-  },
   name: 'ColorPickerComponent',
   props: {
     modelValue: {
@@ -35,102 +33,68 @@ export default {
   emits: ['update:modelValue'],
   data() {
     return {
-      colorHSB: null,
-      colorHEXInternal: this.modelValue,
-      previousHSB: null
+      pickrInstance: null,
+      colorHEXInternal: this.modelValue
     };
   },
   methods: {
-    hsbToHex(val) {
-      const h = val.h;
-      const s = val.s / 100;
-      const v = val.b / 100;
+    setupPickr() {
+      this.pickrInstance = Pickr.create({
+        el: this.$refs.pickrButton,
+        theme: 'nano', // Or another theme like 'monolith' or 'nano'
+        default: `#${this.colorHEXInternal}`,
+        comparison: false, // Hide comparison color
+        components: {
+          preview: true,
+          opacity: false,
+          hue: true,
 
-      const c = v * s;
-      const x = c * (1 - Math.abs((h / 60) % 2 - 1));
-      const m = v - c;
-
-      let r = 0, g = 0, b = 0;
-
-      if (h < 60) {
-        r = c, g = x, b = 0;
-      } else if (h < 120) {
-        r = x, g = c, b = 0;
-      } else if (h < 180) {
-        r = 0, g = c, b = x;
-      } else if (h < 240) {
-        r = 0, g = x, b = c;
-      } else if (h < 300) {
-        r = x, g = 0, b = c;
-      } else {
-        r = c, g = 0, b = x;
-      }
-
-      const rHex = Math.round((r + m) * 255).toString(16).padStart(2, '0');
-      const gHex = Math.round((g + m) * 255).toString(16).padStart(2, '0');
-      const bHex = Math.round((b + m) * 255).toString(16).padStart(2, '0');
-
-      return `${rHex}${gHex}${bHex}`;
-    },
-
-    hexToHsb() {
-      const hex = this.colorHEXInternal.replace(/^#/, '');
-      if (hex.length !== 6) return;
-
-      const r = parseInt(hex.slice(0, 2), 16) / 255;
-      const g = parseInt(hex.slice(2, 4), 16) / 255;
-      const b = parseInt(hex.slice(4, 6), 16) / 255;
-      const max = Math.max(r, g, b), min = Math.min(r, g, b);
-      const d = max - min;
-
-      const v = max;
-      const s = max === 0 ? 0 : d / max;
-      let h = 0;
-
-      if (max !== min) {
-        switch (max) {
-          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-          case g: h = (b - r) / d + 2; break;
-          case b: h = (r - g) / d + 4; break;
+          interaction: {
+            hex: true,
+            rgba: false,
+            hsla: false,
+            hsva: false,
+            cmyk: false,
+            input: true,
+            clear: false,
+            save: true // Keep save button, but 'change' updates the model
+          }
         }
-        h *= 60;
-      }
+      });
 
-      this.colorHSB = { h: Math.round(h), s: Math.round(s * 100), b: Math.round(v * 100) };
-      this.previousHSB = {...this.colorHSB};
-    },
+      // Emit update on every change while the dialog is open
+      this.pickrInstance.on('change', (color, source, instance) => {
+        const hexColor = color.toHEXA().toString().substring(1).toUpperCase(); // Remove # and ensure uppercase
+         // Only update internal value and emit if it's different
+        if (this.colorHEXInternal !== hexColor) {
+            this.colorHEXInternal = hexColor;
+            this.emitUpdate();
+        }
+      });
 
-    updateHSB() {
-      this.hexToHsb();
-    },
+       // The save event will trigger after the change event with the final value
+       // We primarily use it here to hide the picker on save
+      this.pickrInstance.on('save', (color, instance) => {
+          this.pickrInstance.hide();
+      });
 
-    updateHEX() {
-      this.colorHEXInternal = this.hsbToHex(this.colorHSB);
-      this.emitUpdate();
-    },
-
-    handleColorChange() {
-      // If we have a previous HSB value and only the hue has changed
-      // preserve the previous saturation and brightness values
-      if (this.previousHSB && this.colorHSB.h !== this.previousHSB.h &&
-          (this.colorHSB.s === 100 || this.colorHSB.b === 100)) {
-        this.colorHSB = {
-          h: this.colorHSB.h,
-          s: this.previousHSB.s,
-          b: this.previousHSB.b
-        };
-      }
-
-      // Update the HEX value and store the current HSB for future reference
-      this.updateHEX();
-      this.previousHSB = {...this.colorHSB};
+       this.pickrInstance.on('hide', (instance) => {
+          // Sync the color button with the internal value when hidden
+           this.$refs.pickrButton.style.backgroundColor = `#${this.colorHEXInternal}`;
+        });
     },
 
     sanitizeInput(event) {
-      const input = event.target.value.replace(/[^0-9A-Fa-f]/g, '').substring(0, 6);
+      const input = event.target.value.replace(/[^0-9A-Fa-f]/g, '').substring(0, 6).toUpperCase(); // Sanitize and convert to uppercase
       this.colorHEXInternal = input;
-      this.updateHSB();
       this.emitUpdate();
+      // Update Pickr's color when the input changes
+      if (this.pickrInstance) {
+        // Only set color in Pickr if the input is a valid 6-digit hex string
+        if (input.length === 6) {
+           this.pickrInstance.setColor(`#${input}`);
+        }
+      }
     },
 
     emitUpdate() {
@@ -138,17 +102,23 @@ export default {
     }
   },
   mounted() {
-    this.hexToHsb();
-    this.previousHSB = {...this.colorHSB};
+    this.setupPickr();
+  },
+  beforeUnmount() {
+    if (this.pickrInstance) {
+      this.pickrInstance.destroy();
+    }
   },
   watch: {
     modelValue: {
       immediate: true,
       handler(newValue) {
-        if (newValue !== this.colorHEXInternal) {
-          this.colorHEXInternal = newValue;
-          this.hexToHsb();
-          this.previousHSB = {...this.colorHSB};
+        const upperCaseNewValue = newValue ? newValue.toUpperCase() : ''; // Ensure comparison with uppercase
+        if (upperCaseNewValue !== this.colorHEXInternal) {
+          this.colorHEXInternal = upperCaseNewValue;
+          if (this.pickrInstance && upperCaseNewValue.length === 6) { // Only set if valid length
+            this.pickrInstance.setColor(`#${this.colorHEXInternal}`);
+          }
         }
       }
     }
@@ -157,15 +127,21 @@ export default {
 </script>
 
 <style scoped>
-:deep(.p-colorpicker-preview) {
-  width: 48px;
-  height: 24px;
-  border-radius: 2px;
-  transition: background-color 0.2s ease;
-}
 :deep(input) {
   border: none;
   outline: none;
   background: none;
+}
+
+.pickr-button {
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+/* Optional: Style for the pickr dialog container */
+:deep(.pcr-app) {
+  /* Add custom styles for the dialog if needed */
+  font-family: inherit; /* Example: Use your app's font */
 }
 </style>

@@ -3,7 +3,6 @@
   <div class="my-6">
     <p @input="handleChange" ref="question" class="edit-text parent question" v-text="element.question" v-once/>
     <InputNumber 
-      class="" 
       :min="element.min"
       :max="element.max"
       :step="element.step"

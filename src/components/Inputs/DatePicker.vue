@@ -2,7 +2,7 @@
   <div class="relative w-full">
     <!-- Input field that displays the selected date/time -->
     <div
-      class="input w-full flex items-center border border-gray-300 rounded-md px-3 py-2 bg-white cursor-pointer"
+      class="input w-full flex items-center border border-gray-300 rounded-md px-3 py-2 bg-white cursor-pointer transition-all duration-150"
       @click="toggleCalendar"
       ref="inputField"
     >

@@ -2,7 +2,7 @@
   <div class="relative">
     <div
       @click="toggleDropdown"
-      class="flex items-center justify-between w-full p-2 border border-gray-300 rounded cursor-pointer bg-white input"
+      class="flex items-center justify-between w-full p-2 border border-gray-300 rounded cursor-pointer bg-white input transition-all duration-150"
       ref="inputBox"
     >
       <span v-if="selectedOption" class="truncate">{{ selectedOption }}</span>

@@ -2,7 +2,7 @@
   <div class="relative">
     <div
       @click="toggleDropdown"
-      class="flex items-center justify-between w-full border border-gray-300 rounded cursor-pointer bg-white input px-3 py-2"
+      class="flex items-center justify-between w-full border border-gray-300 rounded cursor-pointer bg-white input px-3 py-2 !transition-all !duration-200"
       ref="inputBox"
     >
       <div class="flex flex-wrap gap-1 max-w-full">

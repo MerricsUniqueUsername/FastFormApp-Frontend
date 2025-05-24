@@ -3,7 +3,7 @@
   <div class="my-6">
     <p @input="handleChange" ref="question" class="edit-text parent question" v-text="element.question" v-once/>
     <input 
-      class="slider" 
+      class="slider transition-all duration-150" 
       type="range"
       :min="element.min"
       :max="element.max"
