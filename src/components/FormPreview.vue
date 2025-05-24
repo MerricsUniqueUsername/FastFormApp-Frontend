@@ -481,7 +481,10 @@ export default {
       deep: true,
       handler() {
         this.$nextTick(() => {
-          this.updateSelector();
+          // Wait two ticks to ensure DOM is fully updated
+          this.$nextTick(() => {
+            this.updateSelector();
+          });
         });
       }
     },
@@ -541,11 +544,10 @@ export default {
         onEnd: (evt) => {
           const elementToMove = this.form.elements.splice(evt.oldIndex, 1)[0];
           this.form.elements.splice(evt.newIndex, 0, elementToMove);
+          this.$emit('reorder', this.form.elements);
           
           this.isDragging = false;
           this.$nextTick(() => {
-            // Ensure the selector updates if an element is selected
-            // The existing updateSelector already checks if this.selectedElement is null
             this.updateSelector();
           });
         },

@@ -22,7 +22,14 @@
         <LeftSidebar ref="left_sidebar" @select="selectElement" @openMenu="openMenu" :form="form" :selectedId="selectedId" />
 
         <!-- Main Content -->
-        <FormPreview ref="form_preview" :form="form" @select="setSelectedId" @delete="deleteSelectedElement" class="relative z-1" />
+        <FormPreview 
+          ref="form_preview" 
+          :form="form" 
+          @select="setSelectedId" 
+          @delete="deleteSelectedElement"
+          @reorder="handleReorder"
+          class="relative z-1" 
+        />
 
         <!-- Right Sidebar -->
         <RightSidebar ref="right_sidebar" :form="form" @select="selectElement" @openConditionEditor="openConditionEditor" :selectedId="selectedId" />
@@ -226,6 +233,13 @@ export default {
      */
     forceSave() {
       this.debouncedSave.flush(); // This immediately executes the save
+    },
+
+    /**
+     * Handle reordering of elements
+     */
+    handleReorder(elements) {
+      this.form.elements = elements;
     },
   },
 

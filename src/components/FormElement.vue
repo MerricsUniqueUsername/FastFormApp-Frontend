@@ -3,7 +3,7 @@
     <span 
       v-if="editing" 
       class="drag-handle" 
-      style="position: absolute; top: 50%; transform: translateY(-50%); left: -25px;"
+      style="position: absolute; top: 50%; transform: translateY(-50%); left: -25px; font-size: 20px;"
     >⋮</span>
     <component 
       :is="componentMap[element.type]" 
@@ -268,10 +268,14 @@ export default {
   },
   mounted() {
     this.setupEditMode()
-    this.loadElements()
+    // Wait for child components to mount
     this.$nextTick(() => {
-      this.updateHTMLStructure();
-      this.distributeAttributes()
+      this.loadElements()
+      // Wait another tick for DOM updates
+      this.$nextTick(() => {
+        this.updateHTMLStructure();
+        this.distributeAttributes()
+      })
     })
   },
   beforeUnmount() {
