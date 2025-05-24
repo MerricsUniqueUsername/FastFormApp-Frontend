@@ -42,7 +42,8 @@ body {
   user-select: none; /* Prevent text selection */
   font-size: 2em;   /* Increased from 1.5em */
   padding: 0 5px;   /* Ensure padding is set */
-  margin-right: 8px; /* Ensure correct margin for flex layout */
+  color: dimgray;   /* Set icon color */
+  /* margin-right is removed as positioning is now absolute */
   /* Add other styles like color if desired */
 }
 
@@ -54,12 +55,13 @@ body {
 }
 
 .sortable-chosen {
-  background-color: #e0e0e0; /* Example style */
+  background-color: rgba(0, 0, 0, 0.05); /* More subtle background */
   /* You might want to ensure this doesn't conflict with other 'selected' styles */
 }
 
 .sortable-drag {
-  opacity: 0.9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.05); /* More subtle background */
+  opacity: 0.9; /* Keep existing opacity */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Keep existing shadow */
   /* Ensure the dragged element is visually distinct */
 }
