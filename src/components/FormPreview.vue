@@ -39,6 +39,7 @@
 
 <script>
 import FormElement from './FormElement.vue'
+import Sortable from 'sortablejs';
 
 export default {
   name: 'FormPreview',
@@ -527,6 +528,23 @@ export default {
       this.updateTheme(this.form.theme);
       this.updateCSS();
     });
+
+    // Initialize SortableJS
+    if (this.$refs.form) {
+      new Sortable(this.$refs.form, {
+        animation: 150,
+        handle: '.drag-handle', // We'll add this class to FormElement.vue
+        onEnd: (evt) => {
+          const elementToMove = this.form.elements.splice(evt.oldIndex, 1)[0];
+          this.form.elements.splice(evt.newIndex, 0, elementToMove);
+          // Assuming Vue's reactivity handles the update in App.vue
+          // If not, an event like this.$emit('update:formElements', this.form.elements) would be needed.
+        },
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+      });
+    }
 
   }
 }

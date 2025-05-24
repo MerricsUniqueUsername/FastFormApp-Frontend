@@ -35,3 +35,29 @@
 body {
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
+
+/* Drag handle styles */
+.drag-handle {
+  cursor: grab;
+  user-select: none; /* Prevent text selection */
+  margin-right: 10px; /* Adjust as needed for alignment */
+  /* Add other styles like padding, font-size, or color if desired */
+}
+
+/* SortableJS helper classes */
+.sortable-ghost {
+  opacity: 0.4;
+  background-color: #f0f0f0;
+  border: 2px dashed #ccc;
+}
+
+.sortable-chosen {
+  background-color: #e0e0e0; /* Example style */
+  /* You might want to ensure this doesn't conflict with other 'selected' styles */
+}
+
+.sortable-drag {
+  opacity: 0.9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Ensure the dragged element is visually distinct */
+}
