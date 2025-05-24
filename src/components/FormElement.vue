@@ -1,6 +1,6 @@
 <template>
-  <div ref="element" class="cursor-default parent" :class="{'selected': selected}">
-    <span v-if="editing" class="drag-handle">☰</span>
+  <div ref="element" class="cursor-default parent flex items-center" :class="{'selected': selected}">
+    <span v-if="editing" class="drag-handle">⋮</span>
     <component 
       :is="componentMap[element.type]" 
       v-if="componentMap[element.type]"
