@@ -29,6 +29,7 @@
           @delete="deleteSelectedElement"
           @reorder="handleReorder"
           class="relative z-1" 
+          :key="form.highestId"
         />
 
         <!-- Right Sidebar -->
@@ -142,7 +143,7 @@ export default {
       newElement.classIdPaths = [],
 
       this.form.highestId++;
-      this.form.elements.push(newElement);
+      this.form.elements = [...this.form.elements, newElement];
       this.closeMenu();
     },
 
@@ -330,6 +331,7 @@ export default {
   watch: {
     form: {
       handler() {
+        console.log('App.vue: watch form - new form.elements order:', JSON.stringify(this.form.elements.map(el => el.id)));
         this.getVariables();
         this.triggerAutosave();
       },

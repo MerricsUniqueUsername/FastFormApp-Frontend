@@ -21,15 +21,18 @@
       <div ref="form" class="text-black m-16 relative form">
 
         <!-- Form elements -->
-        <FormElement 
-          @select="selectElement"
-          @change="handleChange"
-          :editing="formInteract" 
+        <div
           v-for="(element) in form.elements"
           :key="element.id" 
-          :element="element" 
-          ref="form_element"
-        />
+        >
+          <FormElement 
+            @select="selectElement"
+            @change="handleChange"
+            :editing="formInteract" 
+            :element="element" 
+            ref="form_element"
+          />
+        </div>
 
       </div>
 
@@ -480,6 +483,7 @@ export default {
     form: {
       deep: true,
       handler() {
+        console.log('FormPreview.vue: watch form - received form.elements order:', JSON.stringify(this.form.elements.map(el => el.id)));
         this.$nextTick(() => {
           // Wait two ticks to ensure DOM is fully updated
           this.$nextTick(() => {
