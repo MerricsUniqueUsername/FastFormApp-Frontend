@@ -37,8 +37,9 @@
             <div v-for="(condition, condIndex) in group.conditions" :key="condIndex"
                  class="flex items-center space-x-2">
               <select v-model="condition.field"
+                      @change="onFieldChange(condition)"
                       class="border border-neutral-700 bg-neutral-700 rounded-sm px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-neutral-200">
-                <option v-for="(variable, index) in variables" :key="index" :value="variable">{{ variable }}</option>
+                <option v-for="(variable, index) in variables" :key="index" :value="variable.name">{{ variable.name }}</option>
               </select>
 
               <select v-model="condition.operator"
@@ -53,8 +54,27 @@
                 <option value="is_not_empty">is not empty</option>
               </select>
 
-              <input v-model="condition.value"
+              <!-- Text input for most types -->
+              <input v-if="!isMultipleChoice(condition) && !isDate(condition)"
+                     v-model="condition.value"
                      type="text"
+                     class="border border-neutral-700 bg-neutral-700 rounded-sm px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-neutral-200"
+                     placeholder="Value">
+
+              <!-- Select dropdown for multiple_choice -->
+              <select v-if="isMultipleChoice(condition)"
+                      v-model="condition.value"
+                      class="border border-neutral-700 bg-neutral-700 rounded-sm px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-neutral-200">
+                <option value="">Select an option</option> <!-- Default option -->
+                <option v-for="(option, optIndex) in getOptionsForField(condition.field)" :key="optIndex" :value="option.value">
+                  {{ option.text }}
+                </option>
+              </select>
+
+              <!-- Date picker for date type -->
+              <input v-if="isDate(condition)"
+                     v-model="condition.value"
+                     type="date"
                      class="border border-neutral-700 bg-neutral-700 rounded-sm px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-neutral-200"
                      placeholder="Value">
 
@@ -115,8 +135,19 @@ export default {
      */
     loadConditions() {
       const element = this.getSelectedElement();
-      if (element) {
-        this.conditions = element.conditions || [];
+      if (element && element.conditions) {
+        this.conditions = element.conditions.map(group => ({
+          ...group,
+          conditions: group.conditions.map(condition => {
+            const selectedVariable = this.variables.find(v => v.name === condition.field);
+            return {
+              ...condition,
+              type: selectedVariable ? selectedVariable.type : null
+            };
+          })
+        }));
+      } else {
+        this.conditions = [];
       }
     },
 
@@ -131,16 +162,23 @@ export default {
      * Add a new group of conditions
      */
     addGroup() {
+      let initialField = null;
+      let initialType = null;
+      if (this.variables && this.variables.length > 0) {
+        initialField = this.variables[0].name;
+        initialType = this.variables[0].type;
+      }
       this.conditions.push({
         operator: 'AND',
         conditions: [
           {
-            field: 'name',
+            field: initialField,
             operator: 'equals',
-            value: ''
+            value: '',
+            type: initialType // Add type property here
           }
         ]
-      })
+      });
     },
 
     /**
@@ -156,11 +194,33 @@ export default {
      * @param groupIndex 
      */
     addCondition(groupIndex) {
+      let initialField = null;
+      let initialType = null;
+      if (this.variables && this.variables.length > 0) {
+        initialField = this.variables[0].name;
+        initialType = this.variables[0].type;
+      }
       this.conditions[groupIndex].conditions.push({
-        field: 'name',
+        field: initialField,
         operator: 'equals',
-        value: ''
-      })
+        value: '',
+        type: initialType // Add type property here
+      });
+    },
+
+    /**
+     * Handle field change to update condition type and reset value
+     * @param condition
+     */
+    onFieldChange(condition) {
+      const selectedVariable = this.variables.find(v => v.name === condition.field);
+      if (selectedVariable) {
+        condition.type = selectedVariable.type;
+        condition.value = ''; // Reset value when field changes
+      } else {
+        condition.type = null;
+        condition.value = '';
+      }
     },
 
     /**
@@ -172,6 +232,41 @@ export default {
       if (this.conditions[groupIndex].conditions.length > 1) {
         this.conditions[groupIndex].conditions.splice(condIndex, 1)
       }
+    },
+
+    /**
+     * Check if the condition type is multiple_choice
+     * @param condition
+     */
+    isMultipleChoice(condition) {
+      return condition && condition.type === 'multiple_choice';
+    },
+
+    /**
+     * Check if the condition type is date
+     * @param condition
+     */
+    isDate(condition) {
+      return condition && condition.type === 'date';
+    },
+
+    /**
+     * Get options for a multiple_choice field
+     * @param fieldName
+     */
+    getOptionsForField(fieldName) {
+      if (!this.form || !this.form.elements) {
+        return [];
+      }
+      const element = this.form.elements.find(el => el.name === fieldName);
+      // For MultipleChoice elements, options are usually in an 'items' array
+      // For Dropdown elements, they might be in an 'options' array.
+      if (element && element.items && Array.isArray(element.items)) {
+        return element.items;
+      } else if (element && element.options && Array.isArray(element.options)) { // For Dropdown
+        return element.options;
+      }
+      return [];
     }
   },
   // Watch for changes in conditions
@@ -184,6 +279,31 @@ export default {
         }
       },
       deep: true
+    },
+    variables: { // Add this new watcher
+      handler(newVariables, oldVariables) {
+        if (JSON.stringify(newVariables) === JSON.stringify(oldVariables)) {
+          return; // No actual change
+        }
+        this.conditions.forEach(group => {
+          group.conditions.forEach(condition => {
+            const selectedVariable = newVariables.find(v => v.name === condition.field);
+            if (selectedVariable) {
+              if (condition.type !== selectedVariable.type) {
+                condition.type = selectedVariable.type;
+                condition.value = ''; // Reset value because type changed
+              }
+            } else {
+              // Field no longer exists in variables
+              if (condition.type !== null) {
+                condition.type = null;
+                condition.value = ''; // Reset value
+              }
+            }
+          });
+        });
+      },
+      deep: true // Watch for changes in the array of objects
     }
   }
 }

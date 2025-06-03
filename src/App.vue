@@ -92,14 +92,17 @@ export default {
      * Update variable list
      */
     getVariables() {
-      const variables = new Set();
+      const variables = [];
+      const variableNames = new Set(); // To keep track of unique names
 
       this.form.elements.forEach((element) => {
-        if(element.name)
-          variables.add(element.name);
+        if (element.name && !variableNames.has(element.name)) {
+          variables.push({ name: element.name, type: element.type }); // Assuming element.type exists
+          variableNames.add(element.name);
+        }
       });
 
-      this.variables = Array.from(variables);
+      this.variables = variables;
     },
 
     /**
